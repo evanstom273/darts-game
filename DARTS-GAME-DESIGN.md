@@ -8,7 +8,7 @@ Authoritative, living record of the game's design. Timestamps are Europe/London,
 
 A **darts career game** (History #6): you make a character, or pick one of the hundreds of existing players (History #7), and play their career, but **you don't play the matches yourself: you watch them or sim them** (History #8). **It's text-based**, with the dartboard, the throws and the darts as graphics (History #16). Working title: none yet; the repository is `darts-game`.
 
-**Where the project stands (as of 2026-11-17T23:51:33+00:00):**
+**Where the project stands (as of 2026-11-17T23:55:29+00:00):**
 - Living design document created (History #1): the stealth game's design document, emptied out to its template and workflow.
 - Top-level concept set by Lyra (History #6–#8).
 - Round 1 of questions done: you are the player, the world is fictional but works like pro darts, matches are watched as a pure spectator, and the career is a deep sim (History #9–#12).
@@ -16,7 +16,7 @@ A **darts career game** (History #6): you make a character, or pick one of the h
 - The game is text-based, with the board and darts as graphics (History #16). Stack and deployment set (History #17, #18).
 - Designing the match view (History #19–#22): it fits the Fold's outer screen in portrait and its inner screen, shows the board, the score and a full PDC-style graphic, with an optional full-stats view. To be built as an Artifact once Lyra has designed it. Layout, the stats view and commentary settled (History #23–#26); the graphic's contents, darts on the board, pace and more stats settled (History #27–#30); inner-screen stats, the "9" indicator and the stats layout settled (History #31–#33); graphics in SVG, and the "9" refined (History #34, #35).
 - **Match view mock-up built** as an Artifact (Lyra: "Build the match view artifact"), with a real dart-by-dart simulated match. Lyra's first look: she really likes the UI; it needs more depth and a more 3D look, and the darts especially need reworking. See §C.
-- **How players play:** no ceilings; everybody can throw any average, with form (in-match and across matches and tournaments) and attributes deciding how often, and good form is never a guarantee (History #36–#39). Attributes started: composure, scoring and checkouts, no overall skill, and attributes are guides, not guarantees (History #40–#42). Consistency and stamina added, making five, on a 1–20 scale (History #43–#45).
+- **How players play:** no ceilings; everybody can throw any average, with form (in-match and across matches and tournaments) and attributes deciding how often, and good form is never a guarantee (History #36–#39). Attributes started: composure, scoring and checkouts, no overall skill, and attributes are guides, not guarantees (History #40–#42). Consistency and stamina added, making five, on a 1–20 scale (History #43–#45). What composure, stamina and consistency cover, and how attributes change over a career, settled (History #46–#50).
 
 **Stack:** web: React, Vite, TypeScript, Tailwind CSS and IndexedDB via Dexie, with Phaser only if the darts need it (History #17). Deployed to GitHub Pages for now, maybe Cloudflare Workers later if needed (History #18).
 
@@ -149,6 +149,11 @@ Don't rush through the questions simply to get to implementation. The design pro
 - **Stamina** is an attribute: holding up over long formats and long days, so players with less of it tail off late in a long match or on a packed day. *(2026-11-17T23:51:33+00:00 — History #44)*
 - **Attributes are on a 1–20 scale**, Football Manager-style. Chosen over 1–100, and hidden attributes described in words. *(2026-11-17T23:51:33+00:00 — History #45)*
 - **The five attributes:** composure, scoring, checkouts, consistency and stamina (#40, #43, #44). Experience was offered and not chosen.
+- **Composure comes into play** on doubles that win something (leg, set and match darts), when scoring under pressure (the opponent waiting on a finish, deciding legs and sets), and on the big stage (TV events, finals and the biggest tournaments turn the pressure up everywhere). All three options chosen. *(2026-11-17T23:55:29+00:00 — History #46)*
+- **Stamina is worn down by** long matches (late in long formats), long days (several matches in a day, as on floor events), and a packed schedule (weeks of events without a break). All three options chosen. *(2026-11-17T23:55:29+00:00 — History #47)*
+- **Consistency covers swings between matches only.** In-match form (#37) handles the swings within a match, so the two jobs stay separate. Claude's recommendation, approved. Chosen over covering both. *(2026-11-17T23:55:29+00:00 — History #48)*
+- **Attributes change slowly over a career, up and down.** On average only 2 or 3 points over about ten years of career mode. Going from 1 to 20 in ten years is unrealistic and too much; so is dropping from 20 to 1 within a few years. What makes them go up or down isn't decided. *(2026-11-17T23:55:29+00:00 — History #49)*
+- **Age doesn't matter.** Lyra's examples: Peter Wright winning his first world title at around 50 in 2020, and Paul Lim reaching a WDF World Championship final at around 70. *(2026-11-17T23:55:29+00:00 — History #50)*
 
 ### Matches
 - **Watching is pure spectating.** No influence during a match: everything you can change is decided before the walk-on. Chosen over a word between legs (Claude's recommendation), calling the shots, and influence only when watching. *(2026-11-17T23:10:30+00:00 — History #11)*
@@ -221,7 +226,7 @@ Earlier, for how a watched match is shown, Lyra shortlisted **the board, close u
 
 1. **Title.**
 2. **The match view** (#19–#35): the mock-up is built (§C); Lyra likes it and wants more depth, a more 3D look and better darts. Still open: the look, and the exact speeds (#29).
-5. **Players and form** (#36–#45): exactly what each attribute covers; how in-match and long-term form move, and what brings them back down; how form and attributes feed the dart model (#14).
+5. **Players and form** (#36–#50): what makes attributes go up or down (#49); what scoring and checkouts cover in detail; where a created character's attributes start; how in-match and long-term form move, and what brings them back down; how form and attributes feed the dart model (#14).
 3. **Whether Phaser is needed** for the darts (#17). The graphics are SVG (#34).
 4. **Art style.**
 
@@ -300,6 +305,11 @@ Earlier, for how a watched match is shown, Lyra shortlisted **the board, close u
 | 43 | 2026-11-17T23:51:33+00:00 | Players | Consistency is an attribute: how wildly a player swings match to match (Claude's recommendation, approved). |
 | 44 | 2026-11-17T23:51:33+00:00 | Players | Stamina is an attribute: holding up over long formats and long days. |
 | 45 | 2026-11-17T23:51:33+00:00 | Players | Attributes on a 1–20 scale. |
+| 46 | 2026-11-17T23:55:29+00:00 | Players | Composure covers doubles that win something, scoring under pressure, and the big stage. |
+| 47 | 2026-11-17T23:55:29+00:00 | Players | Stamina is worn down by long matches, long days and a packed schedule. |
+| 48 | 2026-11-17T23:55:29+00:00 | Players | Consistency covers swings between matches only (Claude's recommendation, approved). |
+| 49 | 2026-11-17T23:55:29+00:00 | Players | Attributes change slowly, up and down: about 2–3 points on average over ten years; never 1 to 20 in ten years or 20 to 1 in a few. |
+| 50 | 2026-11-17T23:55:29+00:00 | Players | Age doesn't matter. |
 
 ---
 
