@@ -6,10 +6,11 @@ Authoritative, living record of the game's design. Timestamps are Europe/London,
 
 ## A. Project Overview
 
-*Nothing designed yet.* Working title: none yet; the repository is `darts-game`.
+A **darts career game** (History #6): you make a character, or pick one of the hundreds of existing players (History #7), and play their career, but **you don't play the matches yourself: you watch them or sim them** (History #8). Working title: none yet; the repository is `darts-game`.
 
-**Where the project stands (as of 2026-11-17T22:55:31+00:00):**
+**Where the project stands (as of 2026-11-17T23:08:14+00:00):**
 - Living design document created (History #1): the stealth game's design document, emptied out to its template and workflow.
+- Top-level concept set by Lyra (History #6–#8). Design starting.
 
 **Stack:** not decided yet.
 
@@ -118,7 +119,9 @@ Don't rush through the questions simply to get to implementation. The design pro
 *Each entry: the decision in bold, any detail, then when it was confirmed and its History number. A changed decision is struck through (~~like this~~) with the number of the entry that changed it.*
 
 ### Concept
-- None yet.
+- **A darts career game.** You play through a darts player's career. *(2026-11-17T23:08:14+00:00 — History #6)*
+- **Make a character, or pick one of the hundreds of existing players**, and play their career. *(2026-11-17T23:08:14+00:00 — History #7)*
+- **You don't play the matches yourself: you watch them or sim them.** *(2026-11-17T23:08:14+00:00 — History #8)*
 
 ### Platforms and input
 - None yet.
@@ -145,7 +148,7 @@ Don't rush through the questions simply to get to implementation. The design pro
 
 ## C. Current Development Scope
 
-Nothing in design yet.
+**In design: the foundations.** The top-level concept is set (#6–#8); first round of questions next.
 
 ---
 
@@ -193,6 +196,9 @@ Nothing in design yet.
 | 3 | 2026-11-17T22:55:31+00:00 *(documentation time)* | Workflow | Development Philosophy: Depth Before Breadth (in full in §A). Carried over from the stealth game. |
 | 4 | 2026-11-17T22:55:31+00:00 *(documentation time)* | Workflow | Development Workflow: Claude Artifacts for visual design and prototyping (in full in §A). Carried over from the stealth game. |
 | 5 | 2026-11-17T22:55:31+00:00 *(documentation time)* | Workflow | Design Workflow: structured rounds of questions and collaborative decision-making (in full in §A). Carried over from the stealth game. |
+| 6 | 2026-11-17T23:08:14+00:00 | Concept | A darts career game. |
+| 7 | 2026-11-17T23:08:14+00:00 | Concept | Make a character, or pick one of the hundreds of existing players, and play their career. |
+| 8 | 2026-11-17T23:08:14+00:00 | Concept | You don't play the matches yourself: you watch them or sim them. |
 
 ---
 
