@@ -8,13 +8,13 @@ Authoritative, living record of the game's design. Timestamps are Europe/London,
 
 A **darts career game** (History #6): you make a character, or pick one of the hundreds of existing players (History #7), and play their career, but **you don't play the matches yourself: you watch them or sim them** (History #8). **It's text-based**, with the dartboard, the throws and the darts as graphics (History #16). Working title: none yet; the repository is `darts-game`.
 
-**Where the project stands (as of 2026-11-17T23:25:12+00:00):**
+**Where the project stands (as of 2026-11-17T23:26:07+00:00):**
 - Living design document created (History #1): the stealth game's design document, emptied out to its template and workflow.
 - Top-level concept set by Lyra (History #6–#8).
 - Round 1 of questions done: you are the player, the world is fictional but works like pro darts, matches are watched as a pure spectator, and the career is a deep sim (History #9–#12).
 - Round 2 (matches) mostly done: simming gives just the result, every dart is simulated, and you can watch any match anywhere (History #13–#15). How a watched match is shown is shortlisted for a mock-up.
 - The game is text-based, with the board and darts as graphics (History #16). Stack and deployment set (History #17, #18).
-- Designing the match view (History #19–#22): it fits the Fold's outer screen in portrait and its inner screen, shows the board, the score and a full PDC-style graphic, with an optional full-stats view. To be built as an Artifact once Lyra has designed it. Layout, the stats view and commentary settled (History #23–#26); the graphic's contents, darts on the board, pace and more stats settled (History #27–#30).
+- Designing the match view (History #19–#22): it fits the Fold's outer screen in portrait and its inner screen, shows the board, the score and a full PDC-style graphic, with an optional full-stats view. To be built as an Artifact once Lyra has designed it. Layout, the stats view and commentary settled (History #23–#26); the graphic's contents, darts on the board, pace and more stats settled (History #27–#30); inner-screen stats, the "9" indicator and the stats layout settled (History #31–#33).
 
 **Stack:** web: React, Vite, TypeScript, Tailwind CSS and IndexedDB via Dexie, with Phaser only if the darts need it (History #17). Deployed to GitHub Pages for now, maybe Cloudflare Workers later if needed (History #18).
 
@@ -151,6 +151,9 @@ Don't rush through the questions simply to get to implementation. The design pro
 - **Darts stay on the board until the next visit:** the three darts stay in through the pause and go as the next player steps up, as they'd be pulled out in real life. Claude's recommendation, approved. Chosen over clearing them after the visit, and building up over the leg. *(2026-11-17T23:25:12+00:00 — History #28)*
 - **Pace is adjustable:** roughly TV pace by default, with a speed control (the option gave 1×, 2× and 4× as examples). Speeding up isn't influencing the match, so it stays pure spectating (#11). Claude's recommendation, approved. Chosen over TV pace fixed, and quick fixed. *(2026-11-17T23:25:12+00:00 — History #29)*
 - **More stats:** best leg (fewest darts to win a leg), legs won against the throw, and ton-plus checkouts (100 or more), added to #22's list. A doubles breakdown wasn't chosen. *(2026-11-17T23:25:12+00:00 — History #30)*
+- **Inner screen: stats beside the board and graphic.** Board and graphic stacked on one side, stats in a column on the other, so the board stays around 450 px across without scrolling. Claude's recommendation, approved. Chosen over stats below. *(2026-11-17T23:26:07+00:00 — History #31)*
+- **The "9" indicator shows while a nine-darter is still possible:** from the first visit, for as long as the score left can still be finished in nine darts in total, gone the moment it can't. Chosen over after an opening 180, and after two 180s. *(2026-11-17T23:26:07+00:00 — History #32)*
+- **The full-stats view is head to head:** one table with a player on each side and the stat names down the middle, like the TV stats graphic. Claude's recommendation, approved. Chosen over one player at a time. *(2026-11-17T23:26:07+00:00 — History #33)*
 
 ### Platforms and input
 - **It has to fit Lyra's Pixel 10 Pro Fold:** the outer screen in portrait, and the inner screen. *(2026-11-17T23:20:59+00:00 — History #20)*
@@ -197,7 +200,7 @@ Earlier, for how a watched match is shown, Lyra shortlisted **the board, close u
 ## E. Open Questions
 
 1. **Title.**
-2. **The match view** (#19–#26): Lyra is designing it; layout, the stats view and commentary are settled. Still open: whether the stats sit beside or below on the inner screen (#24); when the "9" indicator shows (#27); the exact speeds (#29); the look.
+2. **The match view** (#19–#26): Lyra is designing it; layout, the stats view and commentary are settled. Still open: the exact speeds (#29), and the look.
 3. **Whether Phaser is needed** for the darts (#17).
 4. **Art style.**
 
@@ -259,6 +262,9 @@ Earlier, for how a watched match is shown, Lyra shortlisted **the board, close u
 | 28 | 2026-11-17T23:25:12+00:00 | Matches | Darts stay on the board until the next visit (Claude's recommendation, approved). |
 | 29 | 2026-11-17T23:25:12+00:00 | Matches | Pace is adjustable, roughly TV pace by default (Claude's recommendation, approved). |
 | 30 | 2026-11-17T23:25:12+00:00 | Matches | More stats: best leg, legs won against the throw, ton-plus checkouts. |
+| 31 | 2026-11-17T23:26:07+00:00 | Matches | Inner screen: stats beside the board and graphic (Claude's recommendation, approved). |
+| 32 | 2026-11-17T23:26:07+00:00 | Matches | The "9" indicator shows while a nine-darter is still possible. |
+| 33 | 2026-11-17T23:26:07+00:00 | Matches | Full-stats view is head to head, like the TV stats graphic (Claude's recommendation, approved). |
 
 ---
 
