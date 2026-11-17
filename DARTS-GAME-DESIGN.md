@@ -8,7 +8,7 @@ Authoritative, living record of the game's design. Timestamps are Europe/London,
 
 A **darts career game** (History #6): you make a character, or pick one of the hundreds of existing players (History #7), and play their career, but **you don't play the matches yourself: you watch them or sim them** (History #8). **It's text-based**, with the dartboard, the throws and the darts as graphics (History #16). Working title: none yet; the repository is `darts-game`.
 
-**Where the project stands (as of 2026-11-17T23:44:51+00:00):**
+**Where the project stands (as of 2026-11-17T23:47:28+00:00):**
 - Living design document created (History #1): the stealth game's design document, emptied out to its template and workflow.
 - Top-level concept set by Lyra (History #6–#8).
 - Round 1 of questions done: you are the player, the world is fictional but works like pro darts, matches are watched as a pure spectator, and the career is a deep sim (History #9–#12).
@@ -16,7 +16,7 @@ A **darts career game** (History #6): you make a character, or pick one of the h
 - The game is text-based, with the board and darts as graphics (History #16). Stack and deployment set (History #17, #18).
 - Designing the match view (History #19–#22): it fits the Fold's outer screen in portrait and its inner screen, shows the board, the score and a full PDC-style graphic, with an optional full-stats view. To be built as an Artifact once Lyra has designed it. Layout, the stats view and commentary settled (History #23–#26); the graphic's contents, darts on the board, pace and more stats settled (History #27–#30); inner-screen stats, the "9" indicator and the stats layout settled (History #31–#33); graphics in SVG, and the "9" refined (History #34, #35).
 - **Match view mock-up built** as an Artifact (Lyra: "Build the match view artifact"), with a real dart-by-dart simulated match. Lyra's first look: she really likes the UI; it needs more depth and a more 3D look, and the darts especially need reworking. See §C.
-- **How players play:** no ceilings; everybody can throw any average, with form (in-match and across matches and tournaments) and attributes deciding how often (History #36–#38).
+- **How players play:** no ceilings; everybody can throw any average, with form (in-match and across matches and tournaments) and attributes deciding how often, and good form is never a guarantee (History #36–#39).
 
 **Stack:** web: React, Vite, TypeScript, Tailwind CSS and IndexedDB via Dexie, with Phaser only if the darts need it (History #17). Deployed to GitHub Pages for now, maybe Cloudflare Workers later if needed (History #18).
 
@@ -141,6 +141,7 @@ Don't rush through the questions simply to get to implementation. The design pro
 - **No ceilings: everybody is capable of throwing any average.** Unlike darts games that give a player a number that sets how well they can play, a player's ability isn't capped. That doesn't mean everyone throws 120 every game; even players lower down the tour, in pub darts or in regional qualifiers can throw a 110 average now and again, but not everybody does, because players differ on things like form, composure, scoring ability and finishing ability (Lyra's examples; the full list isn't decided), which ebb and flow across matches. *(2026-11-17T23:44:51+00:00 — History #36)*
 - **Form within a match.** A really good visit improves a player's form for that match, so they start playing really well in it and the simulation becomes capable of throwing better darts for them. Crucially, they're not invincible or unbeatable. *(2026-11-17T23:44:51+00:00 — History #37)*
 - **Form across matches and tournaments.** A really good few months in a career (Lyra's example: winning a major, reaching another final and a semi-final) puts a player's form at the top, so they go into every tournament as the favourite. *(2026-11-17T23:44:51+00:00 — History #38)*
+- **Form isn't a guarantee: anyone can throw a stinker.** A player on the best form, winning loads of tournaments and averaging 110 in their last one, can still throw 76 in the next match, "because it's darts. That's how it works, even if you're on really good form." Lyra's real-world examples: Littler, Humphries, Price, Wright and Phil Taylor. (Lyra illustrated form as a letter grade, such as A, calling it "a really shit way of doing it": an illustration, not a decision.) *(2026-11-17T23:47:28+00:00 — History #39)*
 
 ### Matches
 - **Watching is pure spectating.** No influence during a match: everything you can change is decided before the walk-on. Chosen over a word between legs (Claude's recommendation), calling the shots, and influence only when watching. *(2026-11-17T23:10:30+00:00 — History #11)*
@@ -231,6 +232,7 @@ Earlier, for how a watched match is shown, Lyra shortlisted **the board, close u
 - None yet.
 
 ### Implementation interpretations (technical, not design decisions — flag if wrong)
+- **The mock-up is far too consistent for #36–#39** (measured 2026-11-17T23:47:28+00:00): over 3,000 simulated matches, Reid (set up as about a 97 player) averaged 97.6 with a spread of only ±4.0, never went below 83.7, and hit 110+ in 9; de Wit hit 110+ in 3 and never went below 80. Random variation dart by dart evens out over a match, so a 110-then-76 swing has to come from something that varies match to match (and over longer spells), not from the darts' spread alone. The mock-up's only match-level variation is a ±6% "form" roll.
 - **The mock-up's dart model** (not a design decision): each dart lands around its aim point with a normal spread, wider along the line to the centre than across it, widened by nerves on finishing doubles that win a leg, set or match. A spread of about 6.5 mm gives roughly a 97 average, 40% on doubles and 0.3 180s a leg, close to real pro darts; 6.3 and 6.8 mm are used for the two players. Checkout routes are the cheapest route by darts used, then by a preference for good doubles (D20, D16, D18, D10, D8, D12) and high trebles.
 - **"PDC-style" is read as the look and layout of PDC's TV score graphic**, without PDC's name, logo or branding, since the world is fictional (#10).
 - **The filename is as Lyra gave it:** `DARTS-GAME-DESIGN.md`, with hyphens (the stealth game's used underscores).
@@ -284,6 +286,7 @@ Earlier, for how a watched match is shown, Lyra shortlisted **the board, close u
 | 36 | 2026-11-17T23:44:51+00:00 | Players | No ceilings: everybody is capable of throwing any average; form, composure, scoring and finishing ability (examples) decide how often. |
 | 37 | 2026-11-17T23:44:51+00:00 | Players | Form within a match: a really good visit lifts form for that match, but nobody's invincible. |
 | 38 | 2026-11-17T23:44:51+00:00 | Players | Form across matches and tournaments: a great few months makes a player the favourite going into every tournament. |
+| 39 | 2026-11-17T23:47:28+00:00 | Players | Form isn't a guarantee: a player averaging 110 in their last tournament can throw 76 in the next match. |
 
 ---
 
