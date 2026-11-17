@@ -8,12 +8,13 @@ Authoritative, living record of the game's design. Timestamps are Europe/London,
 
 A **darts career game** (History #6): you make a character, or pick one of the hundreds of existing players (History #7), and play their career, but **you don't play the matches yourself: you watch them or sim them** (History #8). **It's text-based**, with the dartboard, the throws and the darts as graphics (History #16). Working title: none yet; the repository is `darts-game`.
 
-**Where the project stands (as of 2026-11-17T23:15:14+00:00):**
+**Where the project stands (as of 2026-11-17T23:20:59+00:00):**
 - Living design document created (History #1): the stealth game's design document, emptied out to its template and workflow.
 - Top-level concept set by Lyra (History #6–#8).
 - Round 1 of questions done: you are the player, the world is fictional but works like pro darts, matches are watched as a pure spectator, and the career is a deep sim (History #9–#12).
 - Round 2 (matches) mostly done: simming gives just the result, every dart is simulated, and you can watch any match anywhere (History #13–#15). How a watched match is shown is shortlisted for a mock-up.
 - The game is text-based, with the board and darts as graphics (History #16). Stack and deployment set (History #17, #18).
+- Designing the match view (History #19–#22): it fits the Fold's outer screen in portrait and its inner screen, shows the board, the score and a full PDC-style graphic, with an optional full-stats view. To be built as an Artifact once Lyra has designed it.
 
 **Stack:** web: React, Vite, TypeScript, Tailwind CSS and IndexedDB via Dexie, with Phaser only if the darts need it (History #17). Deployed to GitHub Pages for now, maybe Cloudflare Workers later if needed (History #18).
 
@@ -139,9 +140,12 @@ Don't rush through the questions simply to get to implementation. The design pro
 - **Simming gives just the result:** the score and the stats screen, nothing else. Chosen over the result with key moments (Claude's recommendation) and a fast-forward of the watched match. *(2026-11-17T23:11:50+00:00 — History #13)*
 - **Every dart is simulated.** Each dart is aimed at a spot and lands with a spread set by skill, nerve, pressure and fatigue; the board scores wherever it lands. Averages, 180s and checkout rates come out of it rather than going in, and what you watch is exactly what was simulated. Claude's recommendation, approved. Chosen over rolling each visit's score from the player's stats. *(2026-11-17T23:11:50+00:00 — History #14)*
 - **You can watch any match anywhere**, whether you're playing in that event or not. Chosen over only your own, and any match at your events. *(2026-11-17T23:11:50+00:00 — History #15)*
+- **The match view gets built as an Artifact, once Lyra has designed it.** *(2026-11-17T23:20:59+00:00 — History #19)*
+- **The match view shows the board, the score and a full PDC-style graphic.** *(2026-11-17T23:20:59+00:00 — History #21)*
+- **An optional full-stats view**, with things like the average, first-9 average, highest checkout, checkout percentage (shown as "1/10 - 10%"), 180s, 140+ and 100+: "all of that sort of thing". *(2026-11-17T23:20:59+00:00 — History #22)*
 
 ### Platforms and input
-- None yet.
+- **It has to fit Lyra's Pixel 10 Pro Fold:** the outer screen in portrait, and the inner screen. *(2026-11-17T23:20:59+00:00 — History #20)*
 
 ### Art and presentation
 - None yet.
@@ -168,7 +172,9 @@ Don't rush through the questions simply to get to implementation. The design pro
 
 **In design: the foundations.** The top-level concept is set (#6–#8); round 1 settled your role, the world, watching and depth (#9–#12). Round 2 settled simming, the dart model and spectating (#13–#15).
 
-**How a watched match is shown:** Lyra shortlisted **the board, close up** (darts landing on a big board, scoreboard alongside) and **scoreboard and commentary** (a live scoreboard and a running commentary feed) for an Artifact mock-up, with the note "It's text based, so" (complete as written: the game is text-based, #16). Broadcast-style and side-on at the oche weren't picked.
+**The match view** is being designed by Lyra (#19–#22): board, score, a full PDC-style graphic and an optional stats view, fitting the Fold in portrait and on its inner screen. Built as an Artifact once designed.
+
+Earlier, for how a watched match is shown, Lyra shortlisted **the board, close up** (darts landing on a big board, scoreboard alongside) and **scoreboard and commentary** (a live scoreboard and a running commentary feed) for an Artifact mock-up, with the note "It's text based, so" (complete as written: the game is text-based, #16). Broadcast-style and side-on at the oche weren't picked.
 
 ---
 
@@ -183,7 +189,7 @@ Don't rush through the questions simply to get to implementation. The design pro
 ## E. Open Questions
 
 1. **Title.**
-2. **How a watched match is shown** (#16): the board close up and scoreboard-and-commentary are shortlisted for a mock-up.
+2. **The match view** (#19–#22): Lyra is designing it; layout, what the graphic holds, and how the stats view opens are still to be decided.
 3. **Whether Phaser is needed** for the darts (#17).
 4. **Art style.**
 
@@ -201,6 +207,7 @@ Don't rush through the questions simply to get to implementation. The design pro
 - None yet.
 
 ### Implementation interpretations (technical, not design decisions — flag if wrong)
+- **"PDC-style" is read as the look and layout of PDC's TV score graphic**, without PDC's name, logo or branding, since the world is fictional (#10).
 - **The filename is as Lyra gave it:** `DARTS-GAME-DESIGN.md`, with hyphens (the stealth game's used underscores).
 - **Lyra's own words in §A are kept word for word**, except that `STEALTH_GAME_DESIGN.md` now reads `DARTS-GAME-DESIGN.md`. Her examples from the stealth game are left as she wrote them, including "our Stylised Geometry reference" in point 4 of the Artifacts section, though no art style has been chosen for this game.
 - **Left out as stealth-specific**, though filed under Workflow there: the first playable piece and the build plans (#37, #46 and #85 in the stealth doc), and "the style guide is a reference, not gospel" (#62 there), which was about the Stylised Geometry guide. The struck-through "Discuss → Decide → Document → Implement → Test → Expand" principle, already superseded there, is left out too.
@@ -232,6 +239,10 @@ Don't rush through the questions simply to get to implementation. The design pro
 | 16 | 2026-11-17T23:15:14+00:00 | Concept | Text-based; the dartboard, the throws and the darts are graphics. |
 | 17 | 2026-11-17T23:15:14+00:00 | Technical | Stack: React, Vite, TypeScript, Tailwind CSS, IndexedDB via Dexie; Phaser only if the darts sim needs it. |
 | 18 | 2026-11-17T23:15:14+00:00 | Technical | Deployed to GitHub Pages for now; maybe Cloudflare Workers in future if needed. |
+| 19 | 2026-11-17T23:20:59+00:00 | Workflow | The match view gets built as an Artifact, once Lyra has designed it. |
+| 20 | 2026-11-17T23:20:59+00:00 | Platform | Has to fit the Pixel 10 Pro Fold: outer screen in portrait, and the inner screen. |
+| 21 | 2026-11-17T23:20:59+00:00 | Matches | The match view shows the board, the score and a full PDC-style graphic. |
+| 22 | 2026-11-17T23:20:59+00:00 | Matches | Optional full-stats view: average, first 9, highest checkout, checkout % as "1/10 - 10%", 180s, 140+, 100+ and the like. |
 
 ---
 
