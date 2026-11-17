@@ -8,13 +8,14 @@ Authoritative, living record of the game's design. Timestamps are Europe/London,
 
 A **darts career game** (History #6): you make a character, or pick one of the hundreds of existing players (History #7), and play their career, but **you don't play the matches yourself: you watch them or sim them** (History #8). **It's text-based**, with the dartboard, the throws and the darts as graphics (History #16). Working title: none yet; the repository is `darts-game`.
 
-**Where the project stands (as of 2026-11-17T23:28:36+00:00):**
+**Where the project stands (as of 2026-11-17T23:39:43+00:00):**
 - Living design document created (History #1): the stealth game's design document, emptied out to its template and workflow.
 - Top-level concept set by Lyra (History #6–#8).
 - Round 1 of questions done: you are the player, the world is fictional but works like pro darts, matches are watched as a pure spectator, and the career is a deep sim (History #9–#12).
 - Round 2 (matches) mostly done: simming gives just the result, every dart is simulated, and you can watch any match anywhere (History #13–#15). How a watched match is shown is shortlisted for a mock-up.
 - The game is text-based, with the board and darts as graphics (History #16). Stack and deployment set (History #17, #18).
 - Designing the match view (History #19–#22): it fits the Fold's outer screen in portrait and its inner screen, shows the board, the score and a full PDC-style graphic, with an optional full-stats view. To be built as an Artifact once Lyra has designed it. Layout, the stats view and commentary settled (History #23–#26); the graphic's contents, darts on the board, pace and more stats settled (History #27–#30); inner-screen stats, the "9" indicator and the stats layout settled (History #31–#33); graphics in SVG, and the "9" refined (History #34, #35).
+- **Match view mock-up built** as an Artifact (Lyra: "Build the match view artifact"), with a real dart-by-dart simulated match; waiting on Lyra's look at it. See §C.
 
 **Stack:** web: React, Vite, TypeScript, Tailwind CSS and IndexedDB via Dexie, with Phaser only if the darts need it (History #17). Deployed to GitHub Pages for now, maybe Cloudflare Workers later if needed (History #18).
 
@@ -154,13 +155,13 @@ Don't rush through the questions simply to get to implementation. The design pro
 - **Inner screen: stats beside the board and graphic.** Board and graphic stacked on one side, stats in a column on the other, so the board stays around 450 px across without scrolling. Claude's recommendation, approved. Chosen over stats below. *(2026-11-17T23:26:07+00:00 — History #31)*
 - **The "9" indicator shows while a nine-darter is still possible:** ~~from the first visit~~ from the first dart (#35), for as long as the score left can still be finished in nine darts in total, gone the moment it can't. Chosen over after an opening 180, and after two 180s. *(2026-11-17T23:26:07+00:00 — History #32)*
 - **The full-stats view is head to head:** one table with a player on each side and the stat names down the middle, like the TV stats graphic. Claude's recommendation, approved. Chosen over one player at a time. *(2026-11-17T23:26:07+00:00 — History #33)*
-- **The "9" isn't lit before the leg starts:** it appears once the first dart is the start of a possible nine-darter, then stays while one is still possible (#32). Lyra: "If the first dart is the start of a possible 9, display it." In practice the first dart needs 31 or more (treble 11 or better, or the bull), and the first visit 151 or more. *(2026-11-17T23:28:36+00:00 — History #35)*
+- **The "9" isn't lit before the leg starts:** it appears once the first dart is the start of a possible nine-darter, then stays while one is still possible (#32). Lyra: "If the first dart is the start of a possible 9, display it." In practice a nine-darter stays possible only after a first dart of T20, T19, T18, T17, T16, T15, the bull, D20 or D17, and a first visit of 151, 154, 157, 160, 161, or 163 and up. *(Corrected 2026-11-17T23:39:43+00:00: Claude first wrote "31 or more" and "151 or more", which was wrong; the exact list comes from the mock-up's simulation.)* *(2026-11-17T23:28:36+00:00 — History #35)*
 
 ### Platforms and input
 - **It has to fit Lyra's Pixel 10 Pro Fold:** the outer screen in portrait, and the inner screen. *(2026-11-17T23:20:59+00:00 — History #20)*
 
 ### Art and presentation
-- **Graphics are SVG:** the board, the darts and the rest of the game's graphics are drawn as SVG. *(2026-11-17T23:28:36+00:00 — History #34)*
+- **Graphics are SVG:** the board and the darts are drawn as SVG. Lyra said "Use SVGs" in answer to how the board and darts are drawn. *(Wording corrected 2026-11-17T23:39:43+00:00: Claude first wrote it as covering all the game's graphics, which went further than Lyra said.)* *(2026-11-17T23:28:36+00:00 — History #34)*
 
 ### Development approach
 - **Not one-shotting the game.** It's built a piece at a time: each piece is made, tested, refined, tested and refined further before moving on to the next. Carried over from the stealth game. *(2026-11-17T22:55:31+00:00, documentation time — History #2)*
@@ -186,6 +187,8 @@ Don't rush through the questions simply to get to implementation. The design pro
 
 **The match view** is being designed by Lyra (#19–#22): board, score, a full PDC-style graphic and an optional stats view, fitting the Fold in portrait and on its inner screen. Built as an Artifact once designed.
 
+**Darts Match View** (Artifact, match view mock-up, 2026-11-17T23:39:43+00:00): https://claude.ai/artifact/Bv6GofTHXNWSxZH29gNzG9. A real simulated match, played dart by dart (#14): each dart is aimed and lands with a spread, and the board and stats show what was actually thrown. On the outer screen in portrait the board is on top, the graphic below and a Stats button swaps the board for the stats (#23, #25); from 700 px wide the stats sit beside the board and graphic (#24, #31). The graphic shows names, sets, legs, remaining, who's throwing, the checkout route, darts this leg and the "9" (#21, #27, #32, #35); darts stay until the next visit (#28); speeds 1×, 2× and 4× (#29); head-to-head stats with everything in #22 and #30 (#33). It opens partway in (set 2, leg 2) so the stats have something in them. Claude's choices, up for change: the look (dark stage, navy graphic, gold score boxes, Barlow Condensed); how the darts are drawn, with orange and cyan flights per player matched by a stripe on their row of the graphic; the graphic's layout (route right-aligned in the name box, the 9 as a gold badge after the name, then darts, sets, legs and remaining); routes shown for both players whenever they're on a finish, picked by a simple preference rule, with singles as plain numbers; BUST shown in the score box, and the legs or sets box flashing on a win; the format (first to 3 sets, sets first to 3 legs, throw alternating); two made-up players, Callum Reid (about a 97 average) and Sander de Wit (about 93); speeds (at 1×, a dart every 1.6 s and 3.2 s after each visit); 140+ as 140–179 and 100+ as 100–139; checkout % counting darts at a finishing double, rounded to a whole percent; the wide layout starting at 700 px.
+
 Earlier, for how a watched match is shown, Lyra shortlisted **the board, close up** (darts landing on a big board, scoreboard alongside) and **scoreboard and commentary** (a live scoreboard and a running commentary feed) for an Artifact mock-up, with the note "It's text based, so" (complete as written: the game is text-based, #16). Broadcast-style and side-on at the oche weren't picked.
 
 ---
@@ -201,7 +204,7 @@ Earlier, for how a watched match is shown, Lyra shortlisted **the board, close u
 ## E. Open Questions
 
 1. **Title.**
-2. **The match view** (#19–#26): Lyra is designing it; layout, the stats view and commentary are settled. Still open: the exact speeds (#29), and the look.
+2. **The match view** (#19–#35): the mock-up is built (§C) and waiting on Lyra's look. Still open: the look, and the exact speeds (#29).
 3. **Whether Phaser is needed** for the darts (#17). The graphics are SVG (#34).
 4. **Art style.**
 
@@ -219,6 +222,7 @@ Earlier, for how a watched match is shown, Lyra shortlisted **the board, close u
 - None yet.
 
 ### Implementation interpretations (technical, not design decisions — flag if wrong)
+- **The mock-up's dart model** (not a design decision): each dart lands around its aim point with a normal spread, wider along the line to the centre than across it, widened by nerves on finishing doubles that win a leg, set or match. A spread of about 6.5 mm gives roughly a 97 average, 40% on doubles and 0.3 180s a leg, close to real pro darts; 6.3 and 6.8 mm are used for the two players. Checkout routes are the cheapest route by darts used, then by a preference for good doubles (D20, D16, D18, D10, D8, D12) and high trebles.
 - **"PDC-style" is read as the look and layout of PDC's TV score graphic**, without PDC's name, logo or branding, since the world is fictional (#10).
 - **The filename is as Lyra gave it:** `DARTS-GAME-DESIGN.md`, with hyphens (the stealth game's used underscores).
 - **Lyra's own words in §A are kept word for word**, except that `STEALTH_GAME_DESIGN.md` now reads `DARTS-GAME-DESIGN.md`. Her examples from the stealth game are left as she wrote them, including "our Stylised Geometry reference" in point 4 of the Artifacts section, though no art style has been chosen for this game.
