@@ -8,13 +8,13 @@ Authoritative, living record of the game's design. Timestamps are Europe/London,
 
 A **darts career game** (History #6): you make a character, or pick one of the hundreds of existing players (History #7), and play their career, but **you don't play the matches yourself: you watch them or sim them** (History #8). **It's text-based**, with the dartboard, the throws and the darts as graphics (History #16). Working title: none yet; the repository is `darts-game`.
 
-**Where the project stands (as of 2026-11-17T23:20:59+00:00):**
+**Where the project stands (as of 2026-11-17T23:23:39+00:00):**
 - Living design document created (History #1): the stealth game's design document, emptied out to its template and workflow.
 - Top-level concept set by Lyra (History #6–#8).
 - Round 1 of questions done: you are the player, the world is fictional but works like pro darts, matches are watched as a pure spectator, and the career is a deep sim (History #9–#12).
 - Round 2 (matches) mostly done: simming gives just the result, every dart is simulated, and you can watch any match anywhere (History #13–#15). How a watched match is shown is shortlisted for a mock-up.
 - The game is text-based, with the board and darts as graphics (History #16). Stack and deployment set (History #17, #18).
-- Designing the match view (History #19–#22): it fits the Fold's outer screen in portrait and its inner screen, shows the board, the score and a full PDC-style graphic, with an optional full-stats view. To be built as an Artifact once Lyra has designed it.
+- Designing the match view (History #19–#22): it fits the Fold's outer screen in portrait and its inner screen, shows the board, the score and a full PDC-style graphic, with an optional full-stats view. To be built as an Artifact once Lyra has designed it. Layout, the stats view and commentary settled (History #23–#26).
 
 **Stack:** web: React, Vite, TypeScript, Tailwind CSS and IndexedDB via Dexie, with Phaser only if the darts need it (History #17). Deployed to GitHub Pages for now, maybe Cloudflare Workers later if needed (History #18).
 
@@ -143,6 +143,10 @@ Don't rush through the questions simply to get to implementation. The design pro
 - **The match view gets built as an Artifact, once Lyra has designed it.** *(2026-11-17T23:20:59+00:00 — History #19)*
 - **The match view shows the board, the score and a full PDC-style graphic.** *(2026-11-17T23:20:59+00:00 — History #21)*
 - **An optional full-stats view**, with things like the average, first-9 average, highest checkout, checkout percentage (shown as "1/10 - 10%"), 180s, 140+ and 100+: "all of that sort of thing". *(2026-11-17T23:20:59+00:00 — History #22)*
+- **Outer screen, portrait: board on top, graphic below.** The board fills the width at the top and the graphic sits under it, like the bottom of a TV picture; nothing covers the board. Claude's recommendation, approved. Chosen over graphic on top, and graphic over the board. *(2026-11-17T23:23:39+00:00 — History #23)*
+- **Inner screen: stats always on show.** Board and graphic as on the outer screen, with the full stats permanently beside or below them rather than optional. Chosen over the same layout bigger, and board and graphic side by side. *(2026-11-17T23:23:39+00:00 — History #24)*
+- **The stats view swaps with the board** (where it's optional, on the outer screen): a button flips the board area to the stats and back, and the graphic stays put so the live score never goes. Claude's recommendation, approved. Chosen over a panel sliding up over the board, and a separate screen. *(2026-11-17T23:23:39+00:00 — History #25)*
+- **No commentary text.** The board and the graphic tell the story. Chosen over a running commentary feed, and just the caller's calls. *(2026-11-17T23:23:39+00:00 — History #26)*
 
 ### Platforms and input
 - **It has to fit Lyra's Pixel 10 Pro Fold:** the outer screen in portrait, and the inner screen. *(2026-11-17T23:20:59+00:00 — History #20)*
@@ -189,7 +193,7 @@ Earlier, for how a watched match is shown, Lyra shortlisted **the board, close u
 ## E. Open Questions
 
 1. **Title.**
-2. **The match view** (#19–#22): Lyra is designing it; layout, what the graphic holds, and how the stats view opens are still to be decided.
+2. **The match view** (#19–#26): Lyra is designing it; layout, the stats view and commentary are settled. Still open: what the graphic holds, how the darts show on the board, and pace. Whether the stats sit beside or below on the inner screen (#24).
 3. **Whether Phaser is needed** for the darts (#17).
 4. **Art style.**
 
@@ -243,6 +247,10 @@ Earlier, for how a watched match is shown, Lyra shortlisted **the board, close u
 | 20 | 2026-11-17T23:20:59+00:00 | Platform | Has to fit the Pixel 10 Pro Fold: outer screen in portrait, and the inner screen. |
 | 21 | 2026-11-17T23:20:59+00:00 | Matches | The match view shows the board, the score and a full PDC-style graphic. |
 | 22 | 2026-11-17T23:20:59+00:00 | Matches | Optional full-stats view: average, first 9, highest checkout, checkout % as "1/10 - 10%", 180s, 140+, 100+ and the like. |
+| 23 | 2026-11-17T23:23:39+00:00 | Matches | Outer screen, portrait: board on top, graphic below (Claude's recommendation, approved). |
+| 24 | 2026-11-17T23:23:39+00:00 | Matches | Inner screen: stats always on show, beside or below the board and graphic. |
+| 25 | 2026-11-17T23:23:39+00:00 | Matches | The optional stats view swaps with the board; the graphic stays (Claude's recommendation, approved). |
+| 26 | 2026-11-17T23:23:39+00:00 | Matches | No commentary text in the match view. |
 
 ---
 
