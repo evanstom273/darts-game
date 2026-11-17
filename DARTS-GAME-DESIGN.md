@@ -8,10 +8,11 @@ Authoritative, living record of the game's design. Timestamps are Europe/London,
 
 A **darts career game** (History #6): you make a character, or pick one of the hundreds of existing players (History #7), and play their career, but **you don't play the matches yourself: you watch them or sim them** (History #8). Working title: none yet; the repository is `darts-game`.
 
-**Where the project stands (as of 2026-11-17T23:10:30+00:00):**
+**Where the project stands (as of 2026-11-17T23:11:50+00:00):**
 - Living design document created (History #1): the stealth game's design document, emptied out to its template and workflow.
 - Top-level concept set by Lyra (History #6–#8).
 - Round 1 of questions done: you are the player, the world is fictional but works like pro darts, matches are watched as a pure spectator, and the career is a deep sim (History #9–#12).
+- Round 2 (matches) mostly done: simming gives just the result, every dart is simulated, and you can watch any match anywhere (History #13–#15). How a watched match is shown is shortlisted for a mock-up.
 
 **Stack:** not decided yet.
 
@@ -133,6 +134,9 @@ Don't rush through the questions simply to get to implementation. The design pro
 
 ### Matches
 - **Watching is pure spectating.** No influence during a match: everything you can change is decided before the walk-on. Chosen over a word between legs (Claude's recommendation), calling the shots, and influence only when watching. *(2026-11-17T23:10:30+00:00 — History #11)*
+- **Simming gives just the result:** the score and the stats screen, nothing else. Chosen over the result with key moments (Claude's recommendation) and a fast-forward of the watched match. *(2026-11-17T23:11:50+00:00 — History #13)*
+- **Every dart is simulated.** Each dart is aimed at a spot and lands with a spread set by skill, nerve, pressure and fatigue; the board scores wherever it lands. Averages, 180s and checkout rates come out of it rather than going in, and what you watch is exactly what was simulated. Claude's recommendation, approved. Chosen over rolling each visit's score from the player's stats. *(2026-11-17T23:11:50+00:00 — History #14)*
+- **You can watch any match anywhere**, whether you're playing in that event or not. Chosen over only your own, and any match at your events. *(2026-11-17T23:11:50+00:00 — History #15)*
 
 ### Platforms and input
 - None yet.
@@ -159,7 +163,9 @@ Don't rush through the questions simply to get to implementation. The design pro
 
 ## C. Current Development Scope
 
-**In design: the foundations.** The top-level concept is set (#6–#8); round 1 settled your role, the world, watching and depth (#9–#12). Next: matches (how they're shown, how simming works, how each dart is decided).
+**In design: the foundations.** The top-level concept is set (#6–#8); round 1 settled your role, the world, watching and depth (#9–#12). Round 2 settled simming, the dart model and spectating (#13–#15).
+
+**How a watched match is shown:** Lyra shortlisted **the board, close up** (darts landing on a big board, scoreboard alongside) and **scoreboard and commentary** (a live scoreboard and a running commentary feed) for an Artifact mock-up, with a note that began "It's text based, so" and was cut off. Broadcast-style and side-on at the oche weren't picked.
 
 ---
 
@@ -214,6 +220,9 @@ Don't rush through the questions simply to get to implementation. The design pro
 | 10 | 2026-11-17T23:10:30+00:00 | World | Fictional world that works like real pro darts; specifics to be designed (Claude's recommendation, approved). |
 | 11 | 2026-11-17T23:10:30+00:00 | Matches | Watching is pure spectating: no influence during a match (chosen over Claude's recommendation of a word between legs). |
 | 12 | 2026-11-17T23:10:30+00:00 | Career | Deep sim, Football Manager-style. |
+| 13 | 2026-11-17T23:11:50+00:00 | Matches | Simming gives just the result (chosen over Claude's recommendation of result and key moments). |
+| 14 | 2026-11-17T23:11:50+00:00 | Matches | Every dart is simulated: aimed, with a spread from skill, nerve, pressure and fatigue; stats come out of it (Claude's recommendation, approved). |
+| 15 | 2026-11-17T23:11:50+00:00 | Matches | You can watch any match anywhere. |
 
 ---
 
