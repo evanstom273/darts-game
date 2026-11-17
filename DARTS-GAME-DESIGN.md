@@ -8,14 +8,15 @@ Authoritative, living record of the game's design. Timestamps are Europe/London,
 
 A **darts career game** (History #6): you make a character, or pick one of the hundreds of existing players (History #7), and play their career, but **you don't play the matches yourself: you watch them or sim them** (History #8). **It's text-based**, with the dartboard, the throws and the darts as graphics (History #16). Working title: none yet; the repository is `darts-game`.
 
-**Where the project stands (as of 2026-11-17T23:39:43+00:00):**
+**Where the project stands (as of 2026-11-17T23:44:51+00:00):**
 - Living design document created (History #1): the stealth game's design document, emptied out to its template and workflow.
 - Top-level concept set by Lyra (History #6–#8).
 - Round 1 of questions done: you are the player, the world is fictional but works like pro darts, matches are watched as a pure spectator, and the career is a deep sim (History #9–#12).
 - Round 2 (matches) mostly done: simming gives just the result, every dart is simulated, and you can watch any match anywhere (History #13–#15). How a watched match is shown is shortlisted for a mock-up.
 - The game is text-based, with the board and darts as graphics (History #16). Stack and deployment set (History #17, #18).
 - Designing the match view (History #19–#22): it fits the Fold's outer screen in portrait and its inner screen, shows the board, the score and a full PDC-style graphic, with an optional full-stats view. To be built as an Artifact once Lyra has designed it. Layout, the stats view and commentary settled (History #23–#26); the graphic's contents, darts on the board, pace and more stats settled (History #27–#30); inner-screen stats, the "9" indicator and the stats layout settled (History #31–#33); graphics in SVG, and the "9" refined (History #34, #35).
-- **Match view mock-up built** as an Artifact (Lyra: "Build the match view artifact"), with a real dart-by-dart simulated match; waiting on Lyra's look at it. See §C.
+- **Match view mock-up built** as an Artifact (Lyra: "Build the match view artifact"), with a real dart-by-dart simulated match. Lyra's first look: she really likes the UI; it needs more depth and a more 3D look, and the darts especially need reworking. See §C.
+- **How players play:** no ceilings; everybody can throw any average, with form (in-match and across matches and tournaments) and attributes deciding how often (History #36–#38).
 
 **Stack:** web: React, Vite, TypeScript, Tailwind CSS and IndexedDB via Dexie, with Phaser only if the darts need it (History #17). Deployed to GitHub Pages for now, maybe Cloudflare Workers later if needed (History #18).
 
@@ -136,6 +137,11 @@ Don't rush through the questions simply to get to implementation. The design pro
 ### The career
 - **Deep sim.** Football Manager-style: detailed attributes, training regimes, finances, form, lots of numbers to pore over. Chosen over light and story-led, and story on top with numbers underneath. *(2026-11-17T23:10:30+00:00 — History #12)*
 
+### Players and form
+- **No ceilings: everybody is capable of throwing any average.** Unlike darts games that give a player a number that sets how well they can play, a player's ability isn't capped. That doesn't mean everyone throws 120 every game; even players lower down the tour, in pub darts or in regional qualifiers can throw a 110 average now and again, but not everybody does, because players differ on things like form, composure, scoring ability and finishing ability (Lyra's examples; the full list isn't decided), which ebb and flow across matches. *(2026-11-17T23:44:51+00:00 — History #36)*
+- **Form within a match.** A really good visit improves a player's form for that match, so they start playing really well in it and the simulation becomes capable of throwing better darts for them. Crucially, they're not invincible or unbeatable. *(2026-11-17T23:44:51+00:00 — History #37)*
+- **Form across matches and tournaments.** A really good few months in a career (Lyra's example: winning a major, reaching another final and a semi-final) puts a player's form at the top, so they go into every tournament as the favourite. *(2026-11-17T23:44:51+00:00 — History #38)*
+
 ### Matches
 - **Watching is pure spectating.** No influence during a match: everything you can change is decided before the walk-on. Chosen over a word between legs (Claude's recommendation), calling the shots, and influence only when watching. *(2026-11-17T23:10:30+00:00 — History #11)*
 - **Simming gives just the result:** the score and the stats screen, nothing else. Chosen over the result with key moments (Claude's recommendation) and a fast-forward of the watched match. *(2026-11-17T23:11:50+00:00 — History #13)*
@@ -189,6 +195,8 @@ Don't rush through the questions simply to get to implementation. The design pro
 
 **Darts Match View** (Artifact, match view mock-up, 2026-11-17T23:39:43+00:00): https://claude.ai/artifact/Bv6GofTHXNWSxZH29gNzG9. A real simulated match, played dart by dart (#14): each dart is aimed and lands with a spread, and the board and stats show what was actually thrown. On the outer screen in portrait the board is on top, the graphic below and a Stats button swaps the board for the stats (#23, #25); from 700 px wide the stats sit beside the board and graphic (#24, #31). The graphic shows names, sets, legs, remaining, who's throwing, the checkout route, darts this leg and the "9" (#21, #27, #32, #35); darts stay until the next visit (#28); speeds 1×, 2× and 4× (#29); head-to-head stats with everything in #22 and #30 (#33). It opens partway in (set 2, leg 2) so the stats have something in them. Claude's choices, up for change: the look (dark stage, navy graphic, gold score boxes, Barlow Condensed); how the darts are drawn, with orange and cyan flights per player matched by a stripe on their row of the graphic; the graphic's layout (route right-aligned in the name box, the 9 as a gold badge after the name, then darts, sets, legs and remaining); routes shown for both players whenever they're on a finish, picked by a simple preference rule, with singles as plain numbers; BUST shown in the score box, and the legs or sets box flashing on a win; the format (first to 3 sets, sets first to 3 legs, throw alternating); two made-up players, Callum Reid (about a 97 average) and Sander de Wit (about 93); speeds (at 1×, a dart every 1.6 s and 3.2 s after each visit); 140+ as 140–179 and 100+ as 100–139; checkout % counting darts at a finishing double, rounded to a whole percent; the wide layout starting at 700 px.
 
+**Lyra's first look at Darts Match View** (2026-11-17T23:44:51+00:00): she really likes the UI, and the idea of it was really good. It could use a bit of work to look better, with a bit of depth and a more 3D look; the darts especially need reworking to look better. Not yet acted on.
+
 Earlier, for how a watched match is shown, Lyra shortlisted **the board, close up** (darts landing on a big board, scoreboard alongside) and **scoreboard and commentary** (a live scoreboard and a running commentary feed) for an Artifact mock-up, with the note "It's text based, so" (complete as written: the game is text-based, #16). Broadcast-style and side-on at the oche weren't picked.
 
 ---
@@ -204,7 +212,8 @@ Earlier, for how a watched match is shown, Lyra shortlisted **the board, close u
 ## E. Open Questions
 
 1. **Title.**
-2. **The match view** (#19–#35): the mock-up is built (§C) and waiting on Lyra's look. Still open: the look, and the exact speeds (#29).
+2. **The match view** (#19–#35): the mock-up is built (§C); Lyra likes it and wants more depth, a more 3D look and better darts. Still open: the look, and the exact speeds (#29).
+5. **Players and form** (#36–#38): the full list of attributes; how in-match and long-term form move, and what brings them back down; how form and attributes feed the dart model (#14).
 3. **Whether Phaser is needed** for the darts (#17). The graphics are SVG (#34).
 4. **Art style.**
 
@@ -272,6 +281,9 @@ Earlier, for how a watched match is shown, Lyra shortlisted **the board, close u
 | 33 | 2026-11-17T23:26:07+00:00 | Matches | Full-stats view is head to head, like the TV stats graphic (Claude's recommendation, approved). |
 | 34 | 2026-11-17T23:28:36+00:00 | Art | Graphics are SVG. |
 | 35 | 2026-11-17T23:28:36+00:00 | Matches | The "9" appears once the first dart is the start of a possible nine-darter, not before the leg starts. Refines #32. |
+| 36 | 2026-11-17T23:44:51+00:00 | Players | No ceilings: everybody is capable of throwing any average; form, composure, scoring and finishing ability (examples) decide how often. |
+| 37 | 2026-11-17T23:44:51+00:00 | Players | Form within a match: a really good visit lifts form for that match, but nobody's invincible. |
+| 38 | 2026-11-17T23:44:51+00:00 | Players | Form across matches and tournaments: a great few months makes a player the favourite going into every tournament. |
 
 ---
 
