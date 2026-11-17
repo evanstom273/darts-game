@@ -8,9 +8,10 @@ Authoritative, living record of the game's design. Timestamps are Europe/London,
 
 A **darts career game** (History #6): you make a character, or pick one of the hundreds of existing players (History #7), and play their career, but **you don't play the matches yourself: you watch them or sim them** (History #8). Working title: none yet; the repository is `darts-game`.
 
-**Where the project stands (as of 2026-11-17T23:08:14+00:00):**
+**Where the project stands (as of 2026-11-17T23:10:30+00:00):**
 - Living design document created (History #1): the stealth game's design document, emptied out to its template and workflow.
-- Top-level concept set by Lyra (History #6–#8). Design starting.
+- Top-level concept set by Lyra (History #6–#8).
+- Round 1 of questions done: you are the player, the world is fictional but works like pro darts, matches are watched as a pure spectator, and the career is a deep sim (History #9–#12).
 
 **Stack:** not decided yet.
 
@@ -122,6 +123,16 @@ Don't rush through the questions simply to get to implementation. The design pro
 - **A darts career game.** You play through a darts player's career. *(2026-11-17T23:08:14+00:00 — History #6)*
 - **Make a character, or pick one of the hundreds of existing players**, and play their career. *(2026-11-17T23:08:14+00:00 — History #7)*
 - **You don't play the matches yourself: you watch them or sim them.** *(2026-11-17T23:08:14+00:00 — History #8)*
+- **You are the player themselves.** Every choice away from the oche is theirs (which events, training, money, kit); on the oche, their skill and nerve do the throwing, and you watch your decisions play out. Claude's recommendation, approved. Chosen over their manager, their coach, and no in-world role. *(2026-11-17T23:10:30+00:00 — History #9)*
+
+### The world
+- **Fictional, but works like real pro darts.** Invented players, tours and events, organised like the pro game. The option described tour cards, a qualifying school, rankings by prize money, majors and a World Championship as examples; the specifics are still to be designed. Claude's recommendation, approved. Chosen over real players and events, and a fully invented darts world. *(2026-11-17T23:10:30+00:00 — History #10)*
+
+### The career
+- **Deep sim.** Football Manager-style: detailed attributes, training regimes, finances, form, lots of numbers to pore over. Chosen over light and story-led, and story on top with numbers underneath. *(2026-11-17T23:10:30+00:00 — History #12)*
+
+### Matches
+- **Watching is pure spectating.** No influence during a match: everything you can change is decided before the walk-on. Chosen over a word between legs (Claude's recommendation), calling the shots, and influence only when watching. *(2026-11-17T23:10:30+00:00 — History #11)*
 
 ### Platforms and input
 - None yet.
@@ -148,7 +159,7 @@ Don't rush through the questions simply to get to implementation. The design pro
 
 ## C. Current Development Scope
 
-**In design: the foundations.** The top-level concept is set (#6–#8); first round of questions next.
+**In design: the foundations.** The top-level concept is set (#6–#8); round 1 settled your role, the world, watching and depth (#9–#12). Next: matches (how they're shown, how simming works, how each dart is decided).
 
 ---
 
@@ -199,6 +210,10 @@ Don't rush through the questions simply to get to implementation. The design pro
 | 6 | 2026-11-17T23:08:14+00:00 | Concept | A darts career game. |
 | 7 | 2026-11-17T23:08:14+00:00 | Concept | Make a character, or pick one of the hundreds of existing players, and play their career. |
 | 8 | 2026-11-17T23:08:14+00:00 | Concept | You don't play the matches yourself: you watch them or sim them. |
+| 9 | 2026-11-17T23:10:30+00:00 | Concept | You are the player themselves: choices away from the oche are yours; their skill and nerve throw (Claude's recommendation, approved). |
+| 10 | 2026-11-17T23:10:30+00:00 | World | Fictional world that works like real pro darts; specifics to be designed (Claude's recommendation, approved). |
+| 11 | 2026-11-17T23:10:30+00:00 | Matches | Watching is pure spectating: no influence during a match (chosen over Claude's recommendation of a word between legs). |
+| 12 | 2026-11-17T23:10:30+00:00 | Career | Deep sim, Football Manager-style. |
 
 ---
 
