@@ -3,7 +3,7 @@ import { average, checkoutPct, daySpread, first9, type Match, type MatchSetup, t
 import type { InRule, OutRule, Play, Stage } from '../engine/rules';
 
 /** Bump when the columns change, so old rows aren't misread. */
-export const CSV_VERSION = 1;
+export const CSV_VERSION = 2;
 
 const ATTR_COLS = ATTRS.map((k) => k);
 const STAT_COLS = [

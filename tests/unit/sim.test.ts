@@ -67,15 +67,38 @@ describe('batch simulation', () => {
       expect(String(m.winner + 1)).toBe(cells[MATCH_HEADER.indexOf('winner')]);
     }
   });
-  test('first-take tuning lands in sensible ranges', () => {
+  test('tuning lands in the agreed ranges (1 = pub, 20 = world class)', () => {
     const top = runBatch(uniform(20), { count: 400, batchSeed: 1, perLeg: false }).matchesCsv;
     const mid = runBatch(uniform(10), { count: 400, batchSeed: 1, perLeg: false }).matchesCsv;
     const low = runBatch(uniform(1), { count: 400, batchSeed: 1, perLeg: false }).matchesCsv;
-    expect(mean(column(top, 'p1_average'))).toBeGreaterThan(98);
-    expect(mean(column(top, 'p1_average'))).toBeLessThan(112);
-    expect(mean(column(mid, 'p1_average'))).toBeGreaterThan(75);
-    expect(mean(column(mid, 'p1_average'))).toBeLessThan(92);
-    expect(mean(column(low, 'p1_average'))).toBeLessThan(70);
+    expect(mean(column(top, 'p1_average'))).toBeGreaterThan(96);
+    expect(mean(column(top, 'p1_average'))).toBeLessThan(108);
+    expect(mean(column(mid, 'p1_average'))).toBeGreaterThan(65);
+    expect(mean(column(mid, 'p1_average'))).toBeLessThan(80);
+    expect(mean(column(low, 'p1_average'))).toBeGreaterThan(38);
+    expect(mean(column(low, 'p1_average'))).toBeLessThan(56);
     expect(mean(column(top, 'p1_checkout_pct'))).toBeLessThan(55);
+  });
+  test('in-match form swings both ways, centred on the player', () => {
+    const mom: number[] = [];
+    for (let seed = 1; seed <= 150; seed++) {
+      const m = playOut(
+        newMatch({
+          players: [
+            { name: 'A', attrs: { scoring: 10, checkouts: 10, composure: 10, consistency: 10, stamina: 10 }, form: 0 },
+            { name: 'B', attrs: { scoring: 18, checkouts: 18, composure: 18, consistency: 18, stamina: 18 }, form: 0 },
+          ],
+          format: { play: 'legs', bestOfLegs: 11, bestOfSets: 1, startScore: 501, inRule: 'straight', outRule: 'double' },
+          stage: 'tv',
+          seed,
+        }),
+      );
+      for (const l of m.legLog) mom.push(...l.momentum);
+    }
+    mom.sort((a, b) => a - b);
+    const q = (p: number) => mom[Math.floor(p * (mom.length - 1))];
+    expect(Math.abs(q(0.5))).toBeLessThan(0.03);
+    expect(q(0.1)).toBeLessThan(-0.02);
+    expect(q(0.9)).toBeGreaterThan(0.02);
   });
 });

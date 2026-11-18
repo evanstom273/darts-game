@@ -1,11 +1,14 @@
 import { aimPoint, scoreAt, type Target } from './board';
 import {
   ATTRS,
+  blinderChance,
   checkoutSpread,
   composureEffect,
   daySd,
+  expectedVisit,
   fatiguePer100,
   scoringSpread,
+  stinkerChance,
   type PlayerConfig,
 } from './players';
 import { gauss, mulberry32, type Rng } from './rng';
@@ -142,10 +145,23 @@ const emptyStats = (): Stats => ({
 export function newMatch(setup: MatchSetup): Match {
   const rng = mulberry32(setup.seed);
   const [a, b] = setup.players;
+  // "On the day": a small everyday roll, and now and again a stinker or a blinder.
   const day = (pl: PlayerConfig): number => {
-    let d = gauss(rng) * daySd(pl.attrs.consistency);
-    if (rng() < TUNING.day.wildChance) d += gauss(rng) * TUNING.day.wildSd;
-    return Math.max(TUNING.day.bestDay, d);
+    const D = TUNING.day;
+    const c = pl.attrs.consistency;
+    const core = gauss(rng) * daySd(c);
+    const r = rng();
+    const extra = gauss(rng);
+    const u = rng();
+    const pStinker = stinkerChance(c);
+    if (r < pStinker) return core + D.stinkerSize + Math.abs(extra) * D.stinkerSpread;
+    if (r < pStinker + blinderChance(c)) {
+      // A blinder: close to the world's best on their best day, whoever they are.
+      const own = scoringSpread(pl.attrs.scoring);
+      const target = D.bestSpread + Math.max(0, own - D.bestSpread) * u * D.blinderReach;
+      return Math.min(core, Math.log(target / own));
+    }
+    return core;
   };
   const dayLog: Pair<number> = [day(a), day(b)];
   const starter: Side = rng() < 0.5 ? 0 : 1;
@@ -210,6 +226,10 @@ function scoringPressure(m: Match, p: Side): boolean {
   return m.format.play === 'sets' && m.sets[0] === sw && m.sets[1] === sw;
 }
 
+/** Tiredness, in log terms on the spread: grows after a player's first `freeDarts` darts of the match. */
+const fatigueLog = (m: Match, p: Side): number =>
+  (Math.max(0, m.dartsMatch[p] - TUNING.stamina.freeDarts) / 100) * m.fatigueRate[p];
+
 function closeVisit(m: Match, points: number, busted: boolean, checkedOut: boolean): void {
   const p = m.visit.p;
   const st = m.stats[p];
@@ -228,15 +248,17 @@ function closeVisit(m: Match, points: number, busted: boolean, checkedOut: boole
   else if (points >= 100) st.c100++;
   if (busted) st.busts++;
 
+  // In-match form: a scoring visit is judged against what this player would normally throw today,
+  // so a 100 is a good visit for a pub player and an ordinary one for the world's best.
   let delta = 0;
   if (busted) delta = T.bust;
   else if (checkedOut) delta = T.checkout;
   else if (m.visit.attempts > 0 || !m.opened[p]) delta = T.missedDoubles;
-  else if (m.visit.startRem > maxFinish(m.format.outRule)) {
-    if (points === 180) delta = T.visit180;
-    else if (points >= 140) delta = T.visit140;
-    else if (points >= 100) delta = T.visit100;
-    else if (points < T.lowBelow) delta = T.visitLow;
+  else if (n === 3 && m.visit.startRem > maxFinish(m.format.outRule)) {
+    const P = TUNING.pressure;
+    const pressure = P.stageBase[m.stage] + (scoringPressure(m, p) ? P.scoring * P.stageMult[m.stage] : 0);
+    const usual = m.sigmaScore[p] * Math.exp(m.dayLog[p] + m.formLog[p] + fatigueLog(m, p)) * (1 + pressure * m.compEff[p]);
+    delta = T.perPoint * (points - expectedVisit(usual));
   }
   m.momentum[p] = Math.max(-T.cap, Math.min(T.cap, m.momentum[p] * T.decay + delta));
 }
@@ -282,8 +304,7 @@ export function advance(m: Match): MatchEvent {
     } else if (scoringPressure(m, p)) moments = TUNING.pressure.scoring;
     const P = TUNING.pressure.stageBase[m.stage] + moments * TUNING.pressure.stageMult[m.stage];
     const base = finishing || aim.dbl ? m.sigmaCheck[p] : m.sigmaScore[p];
-    const fatigue = (Math.max(0, m.dartsMatch[p] - TUNING.stamina.freeDarts) / 100) * m.fatigueRate[p];
-    const sigma = base * Math.exp(m.dayLog[p] + m.formLog[p] - m.momentum[p] + fatigue) * (1 + P * m.compEff[p]);
+    const sigma = base * Math.exp(m.dayLog[p] + m.formLog[p] - m.momentum[p] + fatigueLog(m, p)) * (1 + P * m.compEff[p]);
 
     const thrown = throwDart(m, aim, sigma);
     let counted = true;
