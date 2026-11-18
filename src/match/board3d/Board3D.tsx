@@ -9,12 +9,14 @@ interface Props {
   version: number;
   camera: CameraName;
   design: DartDesign;
-  focus: { x: number; y: number };
+  focus: { x: number; y: number; r: number };
+  /** Match speed: the camera moves faster at higher speeds so it keeps up. */
+  speed: number;
   hidden?: boolean;
 }
 
 /** The 3D board. three.js loads on its own, after the rest of the page. */
-export function Board3D({ darts, version, camera, design, focus, hidden }: Props) {
+export function Board3D({ darts, version, camera, design, focus, speed, hidden }: Props) {
   const host = useRef<HTMLDivElement>(null);
   const board = useRef<BoardScene | null>(null);
   const shown = useRef(0);
@@ -36,7 +38,7 @@ export function Board3D({ darts, version, camera, design, focus, hidden }: Props
         board.current = b;
         const l = latest.current;
         b.setDesign(l.design);
-        b.setFocus(l.focus.x, l.focus.y);
+        b.setFocus(l.focus.x, l.focus.y, l.focus.r);
         b.setCamera(l.camera, true);
         b.sync(l.darts, false);
         shown.current = l.darts.length;
@@ -58,7 +60,8 @@ export function Board3D({ darts, version, camera, design, focus, hidden }: Props
   }, [darts, version]);
   useEffect(() => board.current?.setCamera(camera), [camera]);
   useEffect(() => board.current?.setDesign(design), [design]);
-  useEffect(() => board.current?.setFocus(focus.x, focus.y), [focus.x, focus.y]);
+  const moveMs = Math.max(110, 420 / Math.max(1, speed));
+  useEffect(() => board.current?.setFocus(focus.x, focus.y, focus.r, moveMs), [focus.x, focus.y, focus.r, moveMs]);
 
   return (
     <div

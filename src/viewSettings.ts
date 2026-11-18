@@ -5,8 +5,9 @@ export interface ViewSettings {
   design: DartDesign;
 }
 
-const KEY = 'darts.view.v1';
-const DEFAULT: ViewSettings = { camera: 'straight', design: 'silver' };
+// v2: the dynamic camera became the default.
+const KEY = 'darts.view.v2';
+const DEFAULT: ViewSettings = { camera: 'dynamic', design: 'silver' };
 
 /** Camera and dart design are remembered on this device; nothing breaks if storage isn't available. */
 export function loadView(): ViewSettings {

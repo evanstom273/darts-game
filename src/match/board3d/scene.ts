@@ -13,8 +13,8 @@ export interface BoardScene {
   sync(darts: Dart[], animateNewest: boolean): void;
   setCamera(name: CameraName, instant?: boolean): void;
   setDesign(design: DartDesign): void;
-  /** Where the close-up camera looks: the next target, or the darts in the board. */
-  setFocus(x: number, y: number): void;
+  /** What the dynamic camera frames: a point on the board and how much around it (radius, mm). */
+  setFocus(x: number, y: number, r: number, ms?: number): void;
   dispose(): void;
 }
 
@@ -26,7 +26,7 @@ interface CamSpec {
   look: THREE.Vector3;
   fov: number;
 }
-const FIXED: Record<Exclude<CameraName, 'close'>, CamSpec> = {
+const FIXED: Record<Exclude<CameraName, 'dynamic'>, CamSpec> = {
   straight: { pos: new THREE.Vector3(0, -30, 1240), look: new THREE.Vector3(0, 0, 0), fov: 21.5 },
   angled: { pos: new THREE.Vector3(-640, -170, 1000), look: new THREE.Vector3(18, 0, 0), fov: 23.5 },
   side: { pos: new THREE.Vector3(-1010, -40, 470), look: new THREE.Vector3(40, 0, 30), fov: 25 },
@@ -35,11 +35,17 @@ const FIXED: Record<Exclude<CameraName, 'close'>, CamSpec> = {
   // From the oche, 2.37 m back, at a thrower's eye height (a little below the bull) and just right of centre.
   oche: { pos: new THREE.Vector3(140, -130, 2370), look: new THREE.Vector3(0, 0, 0), fov: 17 },
 };
-const closeSpec = (fx: number, fy: number): CamSpec => ({
-  pos: new THREE.Vector3(fx * 0.92 - 40, fy * 0.92 - 70, 560),
-  look: new THREE.Vector3(fx, fy, 20),
-  fov: 17,
-});
+/** The dynamic camera: frames a circle of radius r around (fx, fy), from a little below and left. */
+const DYN_FOV = 17;
+const dynamicSpec = (fx: number, fy: number, r: number): CamSpec => {
+  const d = Math.max(380, r / Math.tan((DYN_FOV / 2) * (Math.PI / 180)));
+  const k = d / 560;
+  return {
+    pos: new THREE.Vector3(fx * 0.92 - 40 * k, fy * 0.92 - 70 * k, d),
+    look: new THREE.Vector3(fx, fy, 20),
+    fov: DYN_FOV,
+  };
+};
 
 export async function createBoardScene(host: HTMLElement): Promise<BoardScene> {
   const renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -213,12 +219,12 @@ export async function createBoardScene(host: HTMLElement): Promise<BoardScene> {
   }
 
   // ---- Cameras ----
-  let camName: CameraName = 'straight';
-  let focus = new THREE.Vector2(0, 103);
+  let camName: CameraName = 'dynamic';
+  let focus = { x: 0, y: 103, r: 75 };
   const camLook = FIXED.straight.look.clone();
   camera.position.copy(FIXED.straight.pos);
   camera.lookAt(camLook);
-  const specFor = (name: CameraName): CamSpec => (name === 'close' ? closeSpec(focus.x, focus.y) : FIXED[name]);
+  const specFor = (name: CameraName): CamSpec => (name === 'dynamic' ? dynamicSpec(focus.x, focus.y, focus.r) : FIXED[name]);
   let camAnim: ((t: number) => boolean) | null = null;
   function moveCamera(instant: boolean, ms = 650) {
     const to = specFor(camName);
@@ -306,10 +312,10 @@ export async function createBoardScene(host: HTMLElement): Promise<BoardScene> {
       darts.forEach((d) => placeDart(d, false));
       kick();
     },
-    setFocus(x, y) {
-      if (Math.abs(x - focus.x) < 0.5 && Math.abs(y - focus.y) < 0.5) return;
-      focus = new THREE.Vector2(x, y);
-      if (camName === 'close') moveCamera(false, 450);
+    setFocus(x, y, r, ms = 420) {
+      if (Math.abs(x - focus.x) < 0.5 && Math.abs(y - focus.y) < 0.5 && Math.abs(r - focus.r) < 0.5) return;
+      focus = { x, y, r };
+      if (camName === 'dynamic') moveCamera(false, ms);
     },
     dispose() {
       disposed = true;

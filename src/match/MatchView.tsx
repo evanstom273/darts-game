@@ -33,19 +33,31 @@ function useWide(): boolean {
   return wide;
 }
 
-/** Where the close-up camera looks: the darts in the board, or what the thrower's aiming at next. */
-function focusFor(m: Match): { x: number; y: number } {
-  const ds = m.boardDarts;
-  if (ds.length) {
-    const x = ds.reduce((s, d) => s + d.x, 0) / ds.length;
-    const y = ds.reduce((s, d) => s + d.y, 0) / ds.length;
-    return { x: Math.round(x), y: Math.round(y) };
+const WHOLE_BOARD = { x: 0, y: 0, r: 240 };
+const TARGET_R = 75;
+
+/** Frame these darts: their middle, pulled back far enough to show them all. */
+function frameDarts(ds: Match['boardDarts']): { x: number; y: number; r: number } {
+  const x = ds.reduce((s, d) => s + d.x, 0) / ds.length;
+  const y = ds.reduce((s, d) => s + d.y, 0) / ds.length;
+  const spread = Math.max(...ds.map((d) => Math.hypot(d.x - x, d.y - y)));
+  return { x: Math.round(x), y: Math.round(y), r: Math.round(Math.min(240, Math.max(TARGET_R, spread + 55))) };
+}
+
+/**
+ * What the dynamic camera frames. Before each dart: that dart's target (treble 20 when scoring, then
+ * round the checkout dart by dart, so 32 is double 16). When the visit ends: all of its darts.
+ * Between legs and at the end: the whole board.
+ */
+function focusFor(m: Match): { x: number; y: number; r: number } {
+  if (m.phase === 'over') return WHOLE_BOARD;
+  if (m.phase === 'afterVisit' || m.phase === 'afterBust' || m.phase === 'afterLeg') {
+    return m.boardDarts.length ? frameDarts(m.boardDarts) : WHOLE_BOARD;
   }
-  if (m.phase === 'over' || m.phase === 'afterLeg') return { x: 0, y: 0 };
   const p = m.turn;
-  const target = m.opened[p] ? chooseAim(m.format.outRule, m.rem[p], 3).target : OPENING_DOUBLE;
+  const target = m.opened[p] ? chooseAim(m.format.outRule, m.rem[p], 3 - m.visit.darts.length).target : OPENING_DOUBLE;
   const pt = aimPoint(target);
-  return { x: Math.round(pt.x), y: Math.round(pt.y) };
+  return { x: Math.round(pt.x), y: Math.round(pt.y), r: TARGET_R };
 }
 
 interface Props {
@@ -77,7 +89,7 @@ export function MatchView({ match: m, version, playing, speed, onPlaying, onSpee
       <main className="mv-view">
         <section className="mv-stage">
           <div className="mv-screen">
-            <Board3D darts={m.boardDarts} version={version} camera={view.camera} design={view.design} focus={focus} hidden={showStats} />
+            <Board3D darts={m.boardDarts} version={version} camera={view.camera} design={view.design} focus={focus} speed={speed} hidden={showStats} />
             {showStats && (
               <div className="mv-swap">
                 <StatsCard m={m} />
@@ -91,7 +103,7 @@ export function MatchView({ match: m, version, playing, speed, onPlaying, onSpee
               {playing ? 'Pause' : over ? 'Finished' : 'Play'}
             </button>
             <div className="mv-seg" role="group" aria-label="Speed">
-              {[1, 2, 4].map((s) => (
+              {[1, 2, 4, 8].map((s) => (
                 <button key={s} type="button" className="mv-btn" aria-pressed={speed === s} onClick={() => onSpeed(s)}>
                   {s}×
                 </button>

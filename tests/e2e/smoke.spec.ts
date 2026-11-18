@@ -33,7 +33,7 @@ test('the match plays, and batches save one file after another', async ({ page }
   await page.getByRole('button', { name: '4×' }).click();
   await expect(page.getByTestId('board')).toHaveAttribute('data-darts', /[1-3]/, { timeout: 15_000 });
   // Every camera can be picked.
-  for (const cam of ['Close-up', 'Angled', 'Side', 'Low', 'High', 'Oche', 'Straight on']) await page.getByRole('button', { name: cam, exact: true }).click();
+  for (const cam of ['Straight on', 'Angled', 'Side', 'Low', 'High', 'Oche', 'Dynamic']) await page.getByRole('button', { name: cam, exact: true }).click();
   await page.getByRole('button', { name: 'Black', exact: true }).click();
   await page.getByRole('button', { name: 'Silver', exact: true }).click();
 
