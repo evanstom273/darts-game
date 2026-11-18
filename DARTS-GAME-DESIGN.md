@@ -8,7 +8,7 @@ Authoritative, living record of the game's design. Timestamps are Europe/London,
 
 A **darts career game** (History #6): you make a character, or pick one of the hundreds of existing players (History #7), and play their career, but **you don't play the matches yourself: you watch them or sim them** (History #8). **It's text-based**, with the dartboard, the throws and the darts as graphics (History #16). Working title: none yet; the repository is `darts-game`.
 
-**Where the project stands (as of 2026-11-18T00:58:43+00:00):**
+**Where the project stands (as of 2026-11-18T01:12:45+00:00):**
 - Living design document created (History #1): the stealth game's design document, emptied out to its template and workflow.
 - Top-level concept set by Lyra (History #6–#8).
 - Round 1 of questions done: you are the player, the world is fictional but works like pro darts, matches are watched as a pure spectator, and the career is a deep sim (History #9–#12).
@@ -190,7 +190,8 @@ Don't rush through the questions simply to get to implementation. The design pro
 - **It has to fit Lyra's Pixel 10 Pro Fold:** the outer screen in portrait, and the inner screen. *(2026-11-17T23:20:59+00:00 — History #20)*
 
 ### Art and presentation
-- **Graphics are SVG:** the board and the darts are drawn as SVG. Lyra said "Use SVGs" in answer to how the board and darts are drawn. *(Wording corrected 2026-11-17T23:39:43+00:00: Claude first wrote it as covering all the game's graphics, which went further than Lyra said.)* *(2026-11-17T23:28:36+00:00 — History #34)*
+- **Rework the darts and the match view's look: more 3D, better graphics, better darts.** Lyra lifted the SVG rule (#34) for this: switching to something that does real 3D rendering is Claude's call. Claude chose three.js (WebGL) for the board and darts, prototyped first as an Artifact (§C); the score graphic and stats stay as they are, with more depth. *(2026-11-18T01:12:45+00:00 — History #65)*
+- ~~**Graphics are SVG:**~~ (the board and darts can be 3D, #65) **Graphics are SVG:** the board and the darts are drawn as SVG. Lyra said "Use SVGs" in answer to how the board and darts are drawn. *(Wording corrected 2026-11-17T23:39:43+00:00: Claude first wrote it as covering all the game's graphics, which went further than Lyra said.)* *(2026-11-17T23:28:36+00:00 — History #34)*
 
 ### Development approach
 - **Next: attributes and the match view in the game, with a batch simulator for tuning.** The attributes go into the game; the match view Artifact goes in as the template; and a button simulates as many matches as Lyra wants and saves them as a CSV file she can download and bring back, so numbers can be tweaked in the code, 10,000 matches simulated, and the results used to see what worked and what didn't. A tuning and testing tool for this stage of the game. *(2026-11-18T00:03:31+00:00 — History #54)*
@@ -224,6 +225,8 @@ Don't rush through the questions simply to get to implementation. The design pro
 **The match view** is being designed by Lyra (#19–#22): board, score, a full PDC-style graphic and an optional stats view, fitting the Fold in portrait and on its inner screen. Built as an Artifact once designed.
 
 **Darts Match View** (Artifact, match view mock-up, 2026-11-17T23:39:43+00:00): https://claude.ai/artifact/Bv6GofTHXNWSxZH29gNzG9. A real simulated match, played dart by dart (#14): each dart is aimed and lands with a spread, and the board and stats show what was actually thrown. On the outer screen in portrait the board is on top, the graphic below and a Stats button swaps the board for the stats (#23, #25); from 700 px wide the stats sit beside the board and graphic (#24, #31). The graphic shows names, sets, legs, remaining, who's throwing, the checkout route, darts this leg and the "9" (#21, #27, #32, #35); darts stay until the next visit (#28); speeds 1×, 2× and 4× (#29); head-to-head stats with everything in #22 and #30 (#33). It opens partway in (set 2, leg 2) so the stats have something in them. Claude's choices, up for change: the look (dark stage, navy graphic, gold score boxes, Barlow Condensed); how the darts are drawn, with orange and cyan flights per player matched by a stripe on their row of the graphic; the graphic's layout (route right-aligned in the name box, the 9 as a gold badge after the name, then darts, sets, legs and remaining); routes shown for both players whenever they're on a finish, picked by a simple preference rule, with singles as plain numbers; BUST shown in the score box, and the legs or sets box flashing on a win; the format (first to 3 sets, sets first to 3 legs, throw alternating); two made-up players, Callum Reid (about a 97 average) and Sander de Wit (about 93); speeds (at 1×, a dart every 1.6 s and 3.2 s after each visit); 140+ as 140–179 and 100+ as 100–139; checkout % counting darts at a finishing double, rounded to a whole percent; the wide layout starting at 700 px.
+
+****Darts Match View 3D** (Artifact, look rework prototype, 2026-11-18T01:12:45+00:00): https://claude.ai/artifact/XU6DNUwMuDzwK1KTfmqC8f. The approved layout with the board and darts in three.js: a sisal-textured board (canvas texture with speckle and a bump map), a raised polished wire spider, black surround and dark wall, lit by a warm stage spotlight from above left (soft shadows) and a cool fill from the right, with neutral tone mapping and room reflections on the metal. Modelled darts: point, lathe-turned barrel, shaft, four-winged flights in the player's colour with a white chevron. They fly in, thud and settle with a small wobble, sit a little differently each time (tail lifted 7–17°, a little yaw, random spin), cast shadows and stay until the next visit. Options to compare: camera Straight on (TV board camera), Angled, Low; darts Silver (knurled tungsten, black shaft, standard flights) or Black (coated barrel with silver ring cuts, coloured aluminium shaft, slimmer flights). The score graphic and stats keep their layout, with gradients, a gloss highlight, bevels and shadows. The page renders only while something moves. Claude's choices, all up for change: everything listed. Not in the game yet.
 
 **Lyra's first look at Darts Match View** (2026-11-17T23:44:51+00:00): she really likes the UI, and the idea of it was really good. It could use a bit of work to look better, with a bit of depth and a more 3D look; the darts especially need reworking to look better. Not yet acted on.
 
@@ -392,6 +395,7 @@ Earlier, for how a watched match is shown, Lyra shortlisted **the board, close u
 | 62 | 2026-11-18T00:48:58+00:00 | Players | Form should produce big nights: a weaker player on great form throwing more 100+/110+ than a better player on awful form is how form should work. |
 | 63 | 2026-11-18T00:55:00+00:00 | Players | Happy with the engine; averages top out around 125 (TV record 123.40), so cut back 120+ averages. |
 | 64 | 2026-11-18T00:58:43+00:00 | Workflow | The tuning is good enough for now. |
+| 65 | 2026-11-18T01:12:45+00:00 | Art | Rework the darts and match view look in 3D; switching rendering tech is Claude's call (three.js chosen; Artifact prototype first). |
 
 ---
 
