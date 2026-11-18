@@ -1,0 +1,28 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-num: 'Barlow Condensed', 'Roboto Condensed', 'Arial Narrow', sans-serif;
+  --font-ui: 'Barlow', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --color-stage: #0b0e13;
+  --color-surface: #121922;
+  --color-surface-2: #19222d;
+  --color-line: #263241;
+  --color-ink: #eaf0f5;
+  --color-muted: #8996a6;
+  --color-gold: #f3b83a;
+  --color-gold-ink: #17120a;
+  --color-p0: #ff6a45;
+  --color-p1: #35c3dd;
+}
+
+:root {
+  color-scheme: dark;
+}
+html,
+body {
+  height: 100%;
+  background: var(--color-stage);
+  color: var(--color-ink);
+  font-family: var(--font-ui);
+  font-size: 14px;
+}

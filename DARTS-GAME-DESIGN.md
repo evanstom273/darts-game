@@ -8,7 +8,7 @@ Authoritative, living record of the game's design. Timestamps are Europe/London,
 
 A **darts career game** (History #6): you make a character, or pick one of the hundreds of existing players (History #7), and play their career, but **you don't play the matches yourself: you watch them or sim them** (History #8). **It's text-based**, with the dartboard, the throws and the darts as graphics (History #16). Working title: none yet; the repository is `darts-game`.
 
-**Where the project stands (as of 2026-11-18T00:03:31+00:00):**
+**Where the project stands (as of 2026-11-18T00:21:49+00:00):**
 - Living design document created (History #1): the stealth game's design document, emptied out to its template and workflow.
 - Top-level concept set by Lyra (History #6–#8).
 - Round 1 of questions done: you are the player, the world is fictional but works like pro darts, matches are watched as a pure spectator, and the career is a deep sim (History #9–#12).
@@ -17,9 +17,10 @@ A **darts career game** (History #6): you make a character, or pick one of the h
 - Designing the match view (History #19–#22): it fits the Fold's outer screen in portrait and its inner screen, shows the board, the score and a full PDC-style graphic, with an optional full-stats view. To be built as an Artifact once Lyra has designed it. Layout, the stats view and commentary settled (History #23–#26); the graphic's contents, darts on the board, pace and more stats settled (History #27–#30); inner-screen stats, the "9" indicator and the stats layout settled (History #31–#33); graphics in SVG, and the "9" refined (History #34, #35).
 - **Match view mock-up built** as an Artifact (Lyra: "Build the match view artifact"), with a real dart-by-dart simulated match. Lyra's first look: she really likes the UI; it needs more depth and a more 3D look, and the darts especially need reworking. See §C.
 - **How players play:** no ceilings; everybody can throw any average, with form (in-match and across matches and tournaments) and attributes deciding how often, and good form is never a guarantee (History #36–#39). Attributes started: composure, scoring and checkouts, no overall skill, and attributes are guides, not guarantees (History #40–#42). Consistency and stamina added, making five, on a 1–20 scale (History #43–#45). What composure, stamina and consistency cover, and how attributes change over a career, settled (History #46–#50). What moves attributes, and free choice of a created character's attributes, settled (History #51–#53).
-- **Next build requested** (History #54): the attributes and the match view into the game, plus a batch simulator that exports CSV for tuning. Claude to explain the plan and wait for the go-ahead.
+- **Next build requested** (History #54): the attributes and the match view into the game, plus a batch simulator that exports CSV for tuning. Claude explained the plan; Lyra approved it with changes (History #55).
+- **The tuning build is built** (§F): the game scaffolded, the match view ported from the Artifact, the five attributes and form in the dart model, every format variant, and a Simulate panel that runs batches in the background and downloads them as CSV. Pushed to `main`; GitHub Pages deployment set up, waiting on one repository setting (§H).
 
-**Stack:** web: React, Vite, TypeScript, Tailwind CSS and IndexedDB via Dexie, with Phaser only if the darts need it (History #17). Deployed to GitHub Pages for now, maybe Cloudflare Workers later if needed (History #18).
+**Stack:** web: React, Vite, TypeScript, Tailwind CSS and IndexedDB via Dexie, with Phaser only if the darts need it (History #17). So far Phaser isn't needed (everything is SVG) and Dexie isn't in yet (nothing is saved; see §F). Deployed to GitHub Pages for now, maybe Cloudflare Workers later if needed (History #18).
 
 **Art style:** not decided yet.
 
@@ -188,6 +189,7 @@ Don't rush through the questions simply to get to implementation. The design pro
 
 ### Development approach
 - **Next: attributes and the match view in the game, with a batch simulator for tuning.** The attributes go into the game; the match view Artifact goes in as the template; and a button simulates as many matches as Lyra wants and saves them as a CSV file she can download and bring back, so numbers can be tweaked in the code, 10,000 matches simulated, and the results used to see what worked and what didn't. A tuning and testing tool for this stage of the game. *(2026-11-18T00:03:31+00:00 — History #54)*
+- **The build plan is approved, with Lyra's changes.** Form is in. Both players' attributes can be random or set by hand. The format isn't presets: Lyra chooses legs or sets play, the length, double or straight in, the out rule "and that sort of thing", and a batch can randomise all of it per match, so a few thousand matches cover everything from short legs matches to long sets matches. The rest of Claude's plan stands: the scaffold, the match view ported as it is, the attributes' effects as first takes in one tuning file, a background batch with progress and cancel, a matches CSV with an optional legs CSV, seeds for replaying any match, a stage setting, and GitHub Pages deployment. *(2026-11-18T00:21:49+00:00 — History #55)*
 - **Not one-shotting the game.** It's built a piece at a time: each piece is made, tested, refined, tested and refined further before moving on to the next. Carried over from the stealth game. *(2026-11-17T22:55:31+00:00, documentation time — History #2)*
 - **Depth before breadth.** Each mechanic is made polished, satisfying and fully functional before new ones are added. Workflow: Design → Implement → Test → Refine → Test Again → Refine Further → Move On. In full in §A. *(2026-11-17T22:55:31+00:00, documentation time — History #3)*
 - **Claude Artifacts as a visual workshop.** Characters, animations, environments, small mechanic prototypes and UI are designed, compared and refined in Artifacts, approved by Lyra, then used as the reference for implementation. In full in §A. *(2026-11-17T22:55:31+00:00, documentation time — History #4)*
@@ -231,24 +233,44 @@ Earlier, for how a watched match is shown, Lyra shortlisted **the board, close u
 
 1. **Title.**
 2. **The match view** (#19–#35): the mock-up is built (§C); Lyra likes it and wants more depth, a more 3D look and better darts. Still open: the look, and the exact speeds (#29).
-5. **Players and form** (#36–#53): what scoring and checkouts cover in detail; how training works; how in-match and long-term form move, and what brings them back down; how form and attributes feed the dart model (#14).
-3. **Whether Phaser is needed** for the darts (#17). The graphics are SVG (#34).
+5. **Players and form** (#36–#55): what scoring and checkouts cover in detail; how training works; tuning the first-take numbers from CSVs, especially how often upsets happen; how in-match and long-term form move, and what brings them back down; how form and attributes feed the dart model (#14).
+3. **Whether Phaser is needed** for the darts (#17). The graphics are SVG (#34), and nothing has needed it so far.
 4. **Art style.**
 
 ---
 
 ## F. Implementation Status
 
-*Updated 2026-11-17T22:55:31+00:00.*
+*Updated 2026-11-18T00:21:56+00:00.*
 
 | Feature | Status | Notes |
 |---|---|---|
 | Design doc | Done | `DARTS-GAME-DESIGN.md`, emptied out from `STEALTH_GAME_DESIGN.md`. *(2026-11-17T22:55:31+00:00)* |
+| Project scaffold | Done | Vite 8, React 19, TypeScript (strict), Tailwind 4. No Phaser (SVG throughout); no Dexie yet (nothing saved). Type-check and build pass; about 81 kB gzipped. *(2026-11-18T00:21:49+00:00)* |
+| Dart model | Built (first takes) | Every dart simulated (#14): aimed at the middle of a bed, landing with a spread set by the attributes, the day, form, fatigue and pressure. Seeded, so any match replays exactly. All numbers in `src/engine/tuning.ts`. *(2026-11-18T00:21:49+00:00)* |
+| Attributes and form | Built (first takes) | Scoring, checkouts, composure, consistency, stamina on 1–20 (#40–#48); in-match form (#37); long-term form as a per-player setting from -5 to +5 until there's a career (#38). *(2026-11-18T00:21:49+00:00)* |
+| Formats | Built | Legs or sets play at any length (odd best-ofs), starting score 301, 501 or 701, straight or double in, double, master or straight out; stage floor, TV or major final (#55). *(2026-11-18T00:21:49+00:00)* |
+| Match view | Ported | From the Darts Match View Artifact, unchanged in look: board, graphic, stats swap on the outer screen, stats beside from 700 px. The graphic now handles legs play (no sets column) and shows the starting score and rules when they aren't 501 SIDO. *(2026-11-18T00:21:49+00:00)* |
+| Simulate panel | Built | Both players' attributes and form, each set by hand or Random; every format setting and the stage, each fixed or Random; watch a new match with the settings; replay any CSV row; run a batch of up to 100,000 in the background with progress and cancel; download a matches CSV and optionally a legs CSV. Settings are remembered on the device. *(2026-11-18T00:21:49+00:00)* |
+| Tests | Passing | 17 unit tests (board scoring, routes and busts for every out rule, nine-darter first darts, seeded replay, legs and sets results, every format finishing, double-in, CSV columns, batch variety and reproducibility, row replay, tuning ranges); a Playwright test at the Fold's outer and inner sizes that plays a match, opens the stats, runs and downloads a batch and replays a row. *(2026-11-18T00:21:49+00:00)* |
+| Deployment | Set up, not yet live | GitHub Actions builds, tests and deploys to GitHub Pages on every push to `main`. Needs Settings → Pages → Source: GitHub Actions, once (§H). *(2026-11-18T00:21:49+00:00)* |
 
 ### Known issues and limitations
-- None yet.
+- **Upsets are rare.** In first-take tuning, all-20s beats all-10s 99% of the time and all-10s beats all-1s 97%; probably less upset than "no ceilings" (#36) wants. To be tuned from CSVs.
+- **Not yet run on the Fold.** Measured here: 10,000 matches with everything random in 11.5 s in the browser; a phone will be slower.
+- **The darts are still the mock-up's flat darts**; the depth, 3D look and darts rework Lyra asked for (§C) hasn't been done.
+- **Stamina only covers long matches.** Long days and a packed schedule (#47) need tournaments and a calendar.
+- **Long-term form is a setting**, not earned; there's no career yet (#38).
+- **The "9" only shows in 501 legs** (it's about nine-darters), whatever the in and out rules.
+- **No "two clear legs" or sudden-death deciding legs**; every leg and set is a plain best-of.
 
 ### Implementation interpretations (technical, not design decisions — flag if wrong)
+- **How the attributes work in the tuning build** (first takes, 2026-11-18T00:21:49+00:00; all numbers in `src/engine/tuning.ts`): *scoring* sets the spread on treble and single darts and *checkouts* the spread on finishing darts and any dart at a double, each from about 5.6–6.4 mm at 20 to 12.5–13 mm at 1. *Consistency* sets how wide the once-per-match "on the day" roll swings; 4% of matches add a wild day either way, capped so nobody's best day tightens the spread by more than about 22%. *Composure* reduces how much pressure widens the spread (to 20% of it at composure 20): winning doubles (leg, set, match), scoring when the opponent's on a finish or in a deciding leg or set, and a little on every dart on TV or in a major final. *Stamina* sets how fast the spread grows after a player's 300th dart of a match. *In-match form* moves after each scoring visit (up for 100+, 140+, 180, a checkout; down for under 45, a bust, missed doubles), decays by 15% a visit and is capped, so it can't snowball. *Long-term form*: each point is about 2.5% on the spread.
+- **First-take results** (1,500 matches each): all-20s averages about 106 and hits 46% of doubles, best match about 126; all-15s about 95; all-10s about 83; all-5s about 71; all-1s about 62. The mock-up's "far too consistent" problem is addressed by the day roll: an all-15s player now ranges from about 81 to 109 (1st to 99th percentile) instead of ±4.
+- **Double in** aims at D20 to open; darts before the opening double score nothing. A checkout attempt is any dart aimed at a target that would finish under the out rule. Master out finishes on a double, treble or the bull.
+- **Random settings** roll from: attributes 1–20 and form -5 to +5, uniformly; legs play 55% / sets 45%; legs matches best of 5–35; sets matches best of 3–13 with sets of best of 5 legs (85%) or 3 (15%); start 501 (80%), 301 (12%), 701 (8%); straight in 85%; double out 85%, master 8%, straight 7%; stage floor 50%, TV 40%, major final 10%.
+- **The CSV** (version 1): one row per match with both players' attributes, form and on-the-day spread (above 1 is a worse day), the format, the result and every stat in the stats view plus legs won, darts, points, busts and nine-darters; the optional legs CSV has one row per leg with each player's darts, points, leg average and in-match form at the end of the leg. Each row carries its match seed, so pasting it into Replay shows that exact match.
+- **Settings are remembered on the device in browser storage**, not Dexie, since they're a convenience rather than saved game data.
 - **The mock-up is far too consistent for #36–#39** (measured 2026-11-17T23:47:28+00:00): over 3,000 simulated matches, Reid (set up as about a 97 player) averaged 97.6 with a spread of only ±4.0, never went below 83.7, and hit 110+ in 9; de Wit hit 110+ in 3 and never went below 80. Random variation dart by dart evens out over a match, so a 110-then-76 swing has to come from something that varies match to match (and over longer spells), not from the darts' spread alone. The mock-up's only match-level variation is a ±6% "form" roll.
 - **The mock-up's dart model** (not a design decision): each dart lands around its aim point with a normal spread, wider along the line to the centre than across it, widened by nerves on finishing doubles that win a leg, set or match. A spread of about 6.5 mm gives roughly a 97 average, 40% on doubles and 0.3 180s a leg, close to real pro darts; 6.3 and 6.8 mm are used for the two players. Checkout routes are the cheapest route by darts used, then by a preference for good doubles (D20, D16, D18, D10, D8, D12) and high trebles.
 - **"PDC-style" is read as the look and layout of PDC's TV score graphic**, without PDC's name, logo or branding, since the world is fictional (#10).
@@ -319,12 +341,20 @@ Earlier, for how a watched match is shown, Lyra shortlisted **the board, close u
 | 52 | 2026-11-17T23:58:11+00:00 | Players | Created characters: the player picks every attribute freely, 1 to 20, choosing their own difficulty. |
 | 53 | 2026-11-17T23:58:11+00:00 | Concept | Touchstone: MDickie's games (Wrestling Empire), where maximum attributes don't win every match. |
 | 54 | 2026-11-18T00:03:31+00:00 | Workflow | Next build: attributes and the match view in the game, plus a batch simulator exporting CSV for tuning. |
+| 55 | 2026-11-18T00:21:49+00:00 | Workflow | Build plan approved with changes: form; random or hand-set attributes; free choice of format (legs/sets, length, in/out rules), all randomisable per match in batches. |
 
 ---
 
 ## H. Technical Notes
 
 - **Repository:** `evanstom273/darts-game`. Working branch `ccr-e85ad7ee-472voh`.
-- **Project layout:** nothing built yet.
+- **GitHub Pages:** the workflow is `.github/workflows/deploy.yml`. One-time setting for Lyra: repository Settings → Pages → Build and deployment → Source: **GitHub Actions**. The game is then at https://evanstom273.github.io/darts-game/.
+- **Project layout:**
+  - `src/engine/`: the simulation, plain TypeScript with no UI: `board.ts` (geometry and scoring), `rules.ts` (formats, in and out rules, checkout routes, aiming, nine-darter tables), `players.ts` (attributes to spreads), `match.ts` (a match, event by event, with stats), `rng.ts` (seeded randomness), `tuning.ts` (every number).
+  - `src/sim/`: `setup.ts` (settings with Random choices, and what Random rolls from), `batch.ts`, `worker.ts` (runs batches off the main thread), `csv.ts` (columns, rows, reading a row back).
+  - `src/match/`: the match view: `Board.tsx`, `Graphic.tsx`, `StatsCard.tsx`, `MatchView.tsx`, `useMatchRunner.ts` (plays a match in real time), `match.css`.
+  - `src/panel/SimPanel.tsx`: the Simulate panel. `src/App.tsx` puts them together; `src/settings.ts` remembers the settings.
+  - `tests/unit/` (Vitest) and `tests/e2e/` (Playwright). Commands are in the README.
+  - `@playwright/test` is pinned to 1.63.0 to match the browser in Claude's cloud environment.
 - **Explain before adding** *(carried over from Lyra's previous design documents)*: before building anything, Claude says what it's about to add and how, then waits for the go-ahead.
 - **Workflow** *(Lyra's standing order across all her projects)*: after committing to the working branch, always merge straight to `main` as well; no need to ask each time.
