@@ -24,6 +24,7 @@ export function App() {
       <div hidden={simOpen}>
         <MatchView
           match={runner.match}
+          version={runner.version}
           playing={runner.playing}
           speed={runner.speed}
           onPlaying={runner.setPlaying}

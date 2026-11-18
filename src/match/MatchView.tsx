@@ -1,9 +1,13 @@
 import { useEffect, useState } from 'react';
 import './match.css';
-import { Board } from './Board';
+import { Board3D } from './board3d/Board3D';
+import { CAMERAS, type CameraName, type DartDesign } from './board3d/options';
 import { Graphic } from './Graphic';
 import { StatsCard } from './StatsCard';
+import { aimPoint } from '../engine/board';
+import { chooseAim, OPENING_DOUBLE } from '../engine/rules';
 import type { Match } from '../engine/match';
+import { loadView, saveView } from '../viewSettings';
 
 const ICON_PAUSE = (
   <svg viewBox="0 0 14 14" aria-hidden="true">
@@ -29,8 +33,24 @@ function useWide(): boolean {
   return wide;
 }
 
+/** Where the close-up camera looks: the darts in the board, or what the thrower's aiming at next. */
+function focusFor(m: Match): { x: number; y: number } {
+  const ds = m.boardDarts;
+  if (ds.length) {
+    const x = ds.reduce((s, d) => s + d.x, 0) / ds.length;
+    const y = ds.reduce((s, d) => s + d.y, 0) / ds.length;
+    return { x: Math.round(x), y: Math.round(y) };
+  }
+  if (m.phase === 'over' || m.phase === 'afterLeg') return { x: 0, y: 0 };
+  const p = m.turn;
+  const target = m.opened[p] ? chooseAim(m.format.outRule, m.rem[p], 3).target : OPENING_DOUBLE;
+  const pt = aimPoint(target);
+  return { x: Math.round(pt.x), y: Math.round(pt.y) };
+}
+
 interface Props {
   match: Match;
+  version: number;
   playing: boolean;
   speed: number;
   onPlaying: (on: boolean) => void;
@@ -39,11 +59,14 @@ interface Props {
   onOpenSim: () => void;
 }
 
-export function MatchView({ match: m, playing, speed, onPlaying, onSpeed, onNewMatch, onOpenSim }: Props) {
+export function MatchView({ match: m, version, playing, speed, onPlaying, onSpeed, onNewMatch, onOpenSim }: Props) {
   const wide = useWide();
   const [statsShown, setStatsShown] = useState(false);
+  const [view, setView] = useState(loadView);
+  useEffect(() => saveView(view), [view]);
   const showStats = !wide && statsShown;
   const over = m.phase === 'over';
+  const focus = focusFor(m);
 
   return (
     <div className={`mv-app${wide ? ' mv-wide' : ''}`}>
@@ -54,7 +77,7 @@ export function MatchView({ match: m, playing, speed, onPlaying, onSpeed, onNewM
       <main className="mv-view">
         <section className="mv-stage">
           <div className="mv-screen">
-            <Board darts={m.boardDarts} hidden={showStats} />
+            <Board3D darts={m.boardDarts} version={version} camera={view.camera} design={view.design} focus={focus} hidden={showStats} />
             {showStats && (
               <div className="mv-swap">
                 <StatsCard m={m} />
@@ -85,6 +108,30 @@ export function MatchView({ match: m, playing, speed, onPlaying, onSpeed, onNewM
             <button type="button" className="mv-btn gold" onClick={onOpenSim}>
               Simulate
             </button>
+          </div>
+          <div className="mv-opts">
+            <span className="mv-opt-label">Camera</span>
+            <div className="mv-seg small" role="group" aria-label="Camera">
+              {CAMERAS.map((c) => (
+                <button
+                  key={c.id}
+                  type="button"
+                  className="mv-btn"
+                  aria-pressed={view.camera === c.id}
+                  onClick={() => setView({ ...view, camera: c.id as CameraName })}
+                >
+                  {c.label}
+                </button>
+              ))}
+            </div>
+            <span className="mv-opt-label">Darts</span>
+            <div className="mv-seg small" role="group" aria-label="Darts">
+              {(['silver', 'black'] as DartDesign[]).map((d) => (
+                <button key={d} type="button" className="mv-btn" aria-pressed={view.design === d} onClick={() => setView({ ...view, design: d })}>
+                  {d === 'silver' ? 'Silver' : 'Black'}
+                </button>
+              ))}
+            </div>
           </div>
         </section>
         {wide && (

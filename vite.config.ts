@@ -7,5 +7,7 @@ export default defineConfig({
   base: './',
   plugins: [react(), tailwindcss()],
   worker: { format: 'es' },
+  // three.js is big on its own (it loads separately, after the page), so don't warn about it.
+  build: { chunkSizeWarningLimit: 700 },
   test: { include: ['tests/unit/**/*.test.ts'] },
 });

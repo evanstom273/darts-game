@@ -8,7 +8,7 @@ Authoritative, living record of the game's design. Timestamps are Europe/London,
 
 A **darts career game** (History #6): you make a character, or pick one of the hundreds of existing players (History #7), and play their career, but **you don't play the matches yourself: you watch them or sim them** (History #8). **It's text-based**, with the dartboard, the throws and the darts as graphics (History #16). Working title: none yet; the repository is `darts-game`.
 
-**Where the project stands (as of 2026-11-18T01:12:45+00:00):**
+**Where the project stands (as of 2026-11-18T01:20:42+00:00):**
 - Living design document created (History #1): the stealth game's design document, emptied out to its template and workflow.
 - Top-level concept set by Lyra (History #6–#8).
 - Round 1 of questions done: you are the player, the world is fictional but works like pro darts, matches are watched as a pure spectator, and the career is a deep sim (History #9–#12).
@@ -19,6 +19,7 @@ A **darts career game** (History #6): you make a character, or pick one of the h
 - **How players play:** no ceilings; everybody can throw any average, with form (in-match and across matches and tournaments) and attributes deciding how often, and good form is never a guarantee (History #36–#39). Attributes started: composure, scoring and checkouts, no overall skill, and attributes are guides, not guarantees (History #40–#42). Consistency and stamina added, making five, on a 1–20 scale (History #43–#45). What composure, stamina and consistency cover, and how attributes change over a career, settled (History #46–#50). What moves attributes, and free choice of a created character's attributes, settled (History #51–#53).
 - **Next build requested** (History #54): the attributes and the match view into the game, plus a batch simulator that exports CSV for tuning. Claude explained the plan; Lyra approved it with changes (History #55).
 - **The tuning build is built** (§F): the game scaffolded, the match view ported from the Artifact, the five attributes and form in the dart model, every format variant, and a Simulate panel that runs batches in the background and downloads them as CSV. Merged to `main` and live on GitHub Pages. Lyra's first run on the Fold: 10,000 matches in under about 2 seconds.
+- **The match view is 3D in the game** (History #66): three.js board and darts with more lighting, seven cameras and two dart designs; the score graphic and stats have their new depth.
 - **Retuned after batch 2** (History #56–#60): the 1–20 scale now covers pub players to the world's best; in-match form judges visits against the player's own level; the day roll is toned down, with rare blinders and stinkers carrying the big swings; consistency, composure and stamina count for more.
 
 **Stack:** web: React, Vite, TypeScript, Tailwind CSS and IndexedDB via Dexie, with Phaser only if the darts need it (History #17). So far Phaser isn't needed (everything is SVG) and Dexie isn't in yet (nothing is saved; see §F). Deployed to GitHub Pages for now, maybe Cloudflare Workers later if needed (History #18).
@@ -190,6 +191,7 @@ Don't rush through the questions simply to get to implementation. The design pro
 - **It has to fit Lyra's Pixel 10 Pro Fold:** the outer screen in portrait, and the inner screen. *(2026-11-17T23:20:59+00:00 — History #20)*
 
 ### Art and presentation
+- **The game goes 3D, and only 3D.** Lyra loved the prototype. No 2D or SVG option alongside it, even for performance: "No, fuck it, no, just 3D, please." With more lighting, because the black surround and the board's black number ring were hard to tell apart, and a few more camera options. *(2026-11-18T01:20:42+00:00 — History #66)*
 - **Rework the darts and the match view's look: more 3D, better graphics, better darts.** Lyra lifted the SVG rule (#34) for this: switching to something that does real 3D rendering is Claude's call. Claude chose three.js (WebGL) for the board and darts, prototyped first as an Artifact (§C); the score graphic and stats stay as they are, with more depth. *(2026-11-18T01:12:45+00:00 — History #65)*
 - ~~**Graphics are SVG:**~~ (the board and darts can be 3D, #65) **Graphics are SVG:** the board and the darts are drawn as SVG. Lyra said "Use SVGs" in answer to how the board and darts are drawn. *(Wording corrected 2026-11-17T23:39:43+00:00: Claude first wrote it as covering all the game's graphics, which went further than Lyra said.)* *(2026-11-17T23:28:36+00:00 — History #34)*
 
@@ -263,7 +265,7 @@ Earlier, for how a watched match is shown, Lyra shortlisted **the board, close u
 | Dart model | Built (first takes) | Every dart simulated (#14): aimed at the middle of a bed, landing with a spread set by the attributes, the day, form, fatigue and pressure. Seeded, so any match replays exactly. All numbers in `src/engine/tuning.ts`. *(2026-11-18T00:21:49+00:00)* |
 | Attributes and form | Built (first takes) | Scoring, checkouts, composure, consistency, stamina on 1–20 (#40–#48); in-match form (#37); long-term form as a per-player setting from -5 to +5 until there's a career (#38). *(2026-11-18T00:21:49+00:00)* |
 | Formats | Built | Legs or sets play at any length (odd best-ofs), starting score 301, 501 or 701, straight or double in, double, master or straight out; stage floor, TV or major final (#55). *(2026-11-18T00:21:49+00:00)* |
-| Match view | Ported | From the Darts Match View Artifact, unchanged in look: board, graphic, stats swap on the outer screen, stats beside from 700 px. The graphic now handles legs play (no sets column) and shows the starting score and rules when they aren't 501 SIDO. *(2026-11-18T00:21:49+00:00)* |
+| Match view | 3D | Board and darts in three.js (#66), loaded after the page as their own file (about 146 kB gzipped; the rest of the game is about 83 kB). Lighting: warm key spot (shadows), cool fill, soft front fill, a rim light from above and behind, and a wash on the wall; the surround is a charcoal foam, a step lighter than the board's black number ring, with a thin metal band and a lit edge between them. Cameras: Straight on, Close-up (follows what the thrower's aiming at, then the darts in the board), Angled, Side, Low, High, Oche (the thrower's view from 2.37 m). Darts: Silver or Black. Camera and darts are remembered on the device. If a browser can't do 3D, the board says so and the score and stats still work. *(2026-11-18T01:20:42+00:00)* Earlier: | From the Darts Match View Artifact, unchanged in look: board, graphic, stats swap on the outer screen, stats beside from 700 px. The graphic now handles legs play (no sets column) and shows the starting score and rules when they aren't 501 SIDO. *(2026-11-18T00:21:49+00:00)* |
 | Simulate panel | Built | Both players' attributes and form, each set by hand or Random; every format setting and the stage, each fixed or Random; watch a new match with the settings; replay any CSV row; run a batch of up to 100,000 in the background with progress and cancel; download a matches CSV and optionally a legs CSV. Settings are remembered on the device. Saving a CSV opens the system file picker (Android included) to choose where it goes, falling back to the share sheet, then a plain download; added after Chrome on Android blocked Lyra's second download (2026-11-18T00:29:45+00:00). *(2026-11-18T00:21:49+00:00)* |
 | Tests | Passing | 17 unit tests (board scoring, routes and busts for every out rule, nine-darter first darts, seeded replay, legs and sets results, every format finishing, double-in, CSV columns, batch variety and reproducibility, row replay, tuning ranges); a Playwright test at the Fold's outer and inner sizes that plays a match, opens the stats, runs and downloads a batch and replays a row. *(2026-11-18T00:21:49+00:00)* |
 | Deployment | Live | GitHub Actions builds, tests and deploys to GitHub Pages on every push to `main`; the first run succeeded. https://evanstom273.github.io/darts-game/ *(2026-11-18T00:24:15+00:00)* |
@@ -272,7 +274,8 @@ Earlier, for how a watched match is shown, Lyra shortlisted **the board, close u
 - **Upsets now come mostly from blinders.** Best of 11 legs: all-20s beats all-10s 96.7%, all-15s 92.7%; all-10s beats all-5s 91.1%; and a pub player (all-1s) beats the world's best (all-20s) about 5% of the time, because anyone can have a blinder (#36, #57). Approved as it is (#61).
 - **Whitewashes between equals are still common** in batch 2's format (best of 13 sets of 3 legs): 7–0 in about 11% of matches, against about 1.6% if every set were a coin flip. Most come from a blinder or stinker on one side, which #57 needs; approved (#61).
 - ~~**Not yet run on the Fold.**~~ Lyra ran 10,000 matches on the Fold in under about 2 seconds (2026-11-18T00:24:15+00:00). Claude's figure of 11.5 s came from its cloud container, which is far slower, with everything random (longer matches on average).
-- **The darts are still the mock-up's flat darts**; the depth, 3D look and darts rework Lyra asked for (§C) hasn't been done.
+- ~~**The darts are still the mock-up's flat darts.**~~ Done: 3D board and darts (#66).
+- **The 3D board hasn't been seen on the Fold yet**; it was checked in a headless browser with software 3D.
 - **Stamina only covers long matches.** Long days and a packed schedule (#47) need tournaments and a calendar.
 - **Long-term form is a setting**, not earned; there's no career yet (#38).
 - **The "9" only shows in 501 legs** (it's about nine-darters), whatever the in and out rules.
@@ -396,6 +399,7 @@ Earlier, for how a watched match is shown, Lyra shortlisted **the board, close u
 | 63 | 2026-11-18T00:55:00+00:00 | Players | Happy with the engine; averages top out around 125 (TV record 123.40), so cut back 120+ averages. |
 | 64 | 2026-11-18T00:58:43+00:00 | Workflow | The tuning is good enough for now. |
 | 65 | 2026-11-18T01:12:45+00:00 | Art | Rework the darts and match view look in 3D; switching rendering tech is Claude's call (three.js chosen; Artifact prototype first). |
+| 66 | 2026-11-18T01:20:42+00:00 | Art | 3D in the game, and only 3D; more lighting to separate the surround from the board; more camera options. |
 
 ---
 
@@ -406,7 +410,8 @@ Earlier, for how a watched match is shown, Lyra shortlisted **the board, close u
 - **Project layout:**
   - `src/engine/`: the simulation, plain TypeScript with no UI: `board.ts` (geometry and scoring), `rules.ts` (formats, in and out rules, checkout routes, aiming, nine-darter tables), `players.ts` (attributes to spreads), `match.ts` (a match, event by event, with stats), `rng.ts` (seeded randomness), `tuning.ts` (every number).
   - `src/sim/`: `setup.ts` (settings with Random choices, and what Random rolls from), `batch.ts`, `worker.ts` (runs batches off the main thread), `csv.ts` (columns, rows, reading a row back).
-  - `src/match/`: the match view: `Board.tsx`, `Graphic.tsx`, `StatsCard.tsx`, `MatchView.tsx`, `useMatchRunner.ts` (plays a match in real time), `match.css`.
+  - `src/match/board3d/`: the 3D board: `scene.ts` (three.js: board, lighting, darts, cameras), `Board3D.tsx` (loads it after the page), `options.ts` (camera and dart names, kept apart so three.js loads separately).
+  - `src/match/`: the match view: `Graphic.tsx`, `StatsCard.tsx`, `MatchView.tsx`, `useMatchRunner.ts` (plays a match in real time), `match.css`.
   - `src/panel/SimPanel.tsx`: the Simulate panel. `src/App.tsx` puts them together; `src/settings.ts` remembers the settings.
   - `tests/unit/` (Vitest) and `tests/e2e/` (Playwright). Commands are in the README.
   - `@playwright/test` is pinned to 1.63.0 to match the browser in Claude's cloud environment.

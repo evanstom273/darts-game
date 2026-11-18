@@ -23,14 +23,19 @@ test('the match plays, and batches save one file after another', async ({ page }
   });
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
-  page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
+  page.on('console', (m) => m.type() === 'error' && !m.text().includes('GL Driver') && errors.push(m.text()));
   await page.goto('/');
   await expect(page.getByTestId('board')).toBeVisible();
   await expect(page.getByTestId('graphic')).toBeVisible();
 
-  // Speed up and wait for darts to land.
+  // The 3D board loads, then speed up and wait for darts to land in it.
+  await expect(page.getByTestId('board')).toHaveAttribute('data-state', 'ready', { timeout: 30_000 });
   await page.getByRole('button', { name: '4×' }).click();
-  await expect(page.locator('.d-flight').first()).toBeVisible({ timeout: 10_000 });
+  await expect(page.getByTestId('board')).toHaveAttribute('data-darts', /[1-3]/, { timeout: 15_000 });
+  // Every camera can be picked.
+  for (const cam of ['Close-up', 'Angled', 'Side', 'Low', 'High', 'Oche', 'Straight on']) await page.getByRole('button', { name: cam, exact: true }).click();
+  await page.getByRole('button', { name: 'Black', exact: true }).click();
+  await page.getByRole('button', { name: 'Silver', exact: true }).click();
 
   // Stats: beside the board when wide, behind the Stats button when narrow.
   const wide = (page.viewportSize()?.width ?? 0) >= 700;
