@@ -8,7 +8,7 @@ Authoritative, living record of the game's design. Timestamps are Europe/London,
 
 A **darts career game** (History #6): you make a character, or pick one of the hundreds of existing players (History #7), and play their career, but **you don't play the matches yourself: you watch them or sim them** (History #8). **It's text-based**, with the dartboard, the throws and the darts as graphics (History #16). Working title: none yet; the repository is `darts-game`.
 
-**Where the project stands (as of 2026-11-18T00:21:49+00:00):**
+**Where the project stands (as of 2026-11-18T00:24:15+00:00):**
 - Living design document created (History #1): the stealth game's design document, emptied out to its template and workflow.
 - Top-level concept set by Lyra (History #6–#8).
 - Round 1 of questions done: you are the player, the world is fictional but works like pro darts, matches are watched as a pure spectator, and the career is a deep sim (History #9–#12).
@@ -18,7 +18,7 @@ A **darts career game** (History #6): you make a character, or pick one of the h
 - **Match view mock-up built** as an Artifact (Lyra: "Build the match view artifact"), with a real dart-by-dart simulated match. Lyra's first look: she really likes the UI; it needs more depth and a more 3D look, and the darts especially need reworking. See §C.
 - **How players play:** no ceilings; everybody can throw any average, with form (in-match and across matches and tournaments) and attributes deciding how often, and good form is never a guarantee (History #36–#39). Attributes started: composure, scoring and checkouts, no overall skill, and attributes are guides, not guarantees (History #40–#42). Consistency and stamina added, making five, on a 1–20 scale (History #43–#45). What composure, stamina and consistency cover, and how attributes change over a career, settled (History #46–#50). What moves attributes, and free choice of a created character's attributes, settled (History #51–#53).
 - **Next build requested** (History #54): the attributes and the match view into the game, plus a batch simulator that exports CSV for tuning. Claude explained the plan; Lyra approved it with changes (History #55).
-- **The tuning build is built** (§F): the game scaffolded, the match view ported from the Artifact, the five attributes and form in the dart model, every format variant, and a Simulate panel that runs batches in the background and downloads them as CSV. Pushed to `main`; GitHub Pages deployment set up, waiting on one repository setting (§H).
+- **The tuning build is built** (§F): the game scaffolded, the match view ported from the Artifact, the five attributes and form in the dart model, every format variant, and a Simulate panel that runs batches in the background and downloads them as CSV. Merged to `main` and live on GitHub Pages. Lyra's first run on the Fold: 10,000 matches in under about 2 seconds.
 
 **Stack:** web: React, Vite, TypeScript, Tailwind CSS and IndexedDB via Dexie, with Phaser only if the darts need it (History #17). So far Phaser isn't needed (everything is SVG) and Dexie isn't in yet (nothing is saved; see §F). Deployed to GitHub Pages for now, maybe Cloudflare Workers later if needed (History #18).
 
@@ -253,11 +253,11 @@ Earlier, for how a watched match is shown, Lyra shortlisted **the board, close u
 | Match view | Ported | From the Darts Match View Artifact, unchanged in look: board, graphic, stats swap on the outer screen, stats beside from 700 px. The graphic now handles legs play (no sets column) and shows the starting score and rules when they aren't 501 SIDO. *(2026-11-18T00:21:49+00:00)* |
 | Simulate panel | Built | Both players' attributes and form, each set by hand or Random; every format setting and the stage, each fixed or Random; watch a new match with the settings; replay any CSV row; run a batch of up to 100,000 in the background with progress and cancel; download a matches CSV and optionally a legs CSV. Settings are remembered on the device. *(2026-11-18T00:21:49+00:00)* |
 | Tests | Passing | 17 unit tests (board scoring, routes and busts for every out rule, nine-darter first darts, seeded replay, legs and sets results, every format finishing, double-in, CSV columns, batch variety and reproducibility, row replay, tuning ranges); a Playwright test at the Fold's outer and inner sizes that plays a match, opens the stats, runs and downloads a batch and replays a row. *(2026-11-18T00:21:49+00:00)* |
-| Deployment | Set up, not yet live | GitHub Actions builds, tests and deploys to GitHub Pages on every push to `main`. Needs Settings → Pages → Source: GitHub Actions, once (§H). *(2026-11-18T00:21:49+00:00)* |
+| Deployment | Live | GitHub Actions builds, tests and deploys to GitHub Pages on every push to `main`; the first run succeeded. https://evanstom273.github.io/darts-game/ *(2026-11-18T00:24:15+00:00)* |
 
 ### Known issues and limitations
 - **Upsets are rare.** In first-take tuning, all-20s beats all-10s 99% of the time and all-10s beats all-1s 97%; probably less upset than "no ceilings" (#36) wants. To be tuned from CSVs.
-- **Not yet run on the Fold.** Measured here: 10,000 matches with everything random in 11.5 s in the browser; a phone will be slower.
+- ~~**Not yet run on the Fold.**~~ Lyra ran 10,000 matches on the Fold in under about 2 seconds (2026-11-18T00:24:15+00:00). Claude's figure of 11.5 s came from its cloud container, which is far slower, with everything random (longer matches on average).
 - **The darts are still the mock-up's flat darts**; the depth, 3D look and darts rework Lyra asked for (§C) hasn't been done.
 - **Stamina only covers long matches.** Long days and a packed schedule (#47) need tournaments and a calendar.
 - **Long-term form is a setting**, not earned; there's no career yet (#38).
@@ -348,7 +348,7 @@ Earlier, for how a watched match is shown, Lyra shortlisted **the board, close u
 ## H. Technical Notes
 
 - **Repository:** `evanstom273/darts-game`. Working branch `ccr-e85ad7ee-472voh`.
-- **GitHub Pages:** the workflow is `.github/workflows/deploy.yml`. One-time setting for Lyra: repository Settings → Pages → Build and deployment → Source: **GitHub Actions**. The game is then at https://evanstom273.github.io/darts-game/.
+- **GitHub Pages:** the workflow is `.github/workflows/deploy.yml`, deploying on every push to `main`. The game is at https://evanstom273.github.io/darts-game/.
 - **Project layout:**
   - `src/engine/`: the simulation, plain TypeScript with no UI: `board.ts` (geometry and scoring), `rules.ts` (formats, in and out rules, checkout routes, aiming, nine-darter tables), `players.ts` (attributes to spreads), `match.ts` (a match, event by event, with stats), `rng.ts` (seeded randomness), `tuning.ts` (every number).
   - `src/sim/`: `setup.ts` (settings with Random choices, and what Random rolls from), `batch.ts`, `worker.ts` (runs batches off the main thread), `csv.ts` (columns, rows, reading a row back).
