@@ -304,7 +304,9 @@ export function advance(m: Match): MatchEvent {
     } else if (scoringPressure(m, p)) moments = TUNING.pressure.scoring;
     const P = TUNING.pressure.stageBase[m.stage] + moments * TUNING.pressure.stageMult[m.stage];
     const base = finishing || aim.dbl ? m.sigmaCheck[p] : m.sigmaScore[p];
-    const sigma = base * Math.exp(m.dayLog[p] + m.formLog[p] - m.momentum[p] + fatigueLog(m, p)) * (1 + P * m.compEff[p]);
+    // The day, form and in-match form can't make anyone tighter than the floor; tiredness and pressure still widen it.
+    const best = Math.max(TUNING.spread.min, base * Math.exp(m.dayLog[p] + m.formLog[p] - m.momentum[p]));
+    const sigma = best * Math.exp(fatigueLog(m, p)) * (1 + P * m.compEff[p]);
 
     const thrown = throwDart(m, aim, sigma);
     let counted = true;

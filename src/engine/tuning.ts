@@ -14,6 +14,11 @@ export const TUNING = {
     scoring: { at20: 5.6, at1: 19 },
     /** Finishing darts and any dart at a double. Aim: 1 ≈ 12% on doubles, 20 ≈ 43%. */
     checkouts: { at20: 6.0, at1: 15.5 },
+    /**
+     * Nobody throws tighter than this, whatever their day, form and in-match form: it keeps averages over
+     * a normal-length match at about 125 at most (the TV record is van Gerwen's 123.40 in 2016).
+     */
+    min: 4.5,
     /** Darts miss more along the line to the centre (high and low on the treble) than across it. */
     radial: 1.12,
     tangential: 0.9,
