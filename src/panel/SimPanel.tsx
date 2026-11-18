@@ -24,16 +24,64 @@ type Batch =
   | { state: 'running'; done: number; total: number }
   | { state: 'done'; matchesCsv: string; legsCsv: string | null; matches: number; ms: number; seed: number; cancelled: boolean };
 
-function download(name: string, text: string): void {
-  const url = URL.createObjectURL(new Blob([text], { type: 'text/csv' }));
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = name;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  setTimeout(() => URL.revokeObjectURL(url), 10_000);
+type SaveResult = 'saved' | 'shared' | 'downloaded' | 'cancelled' | 'failed';
+
+type SavePicker = (opts: {
+  suggestedName: string;
+  types: { description: string; accept: Record<string, string[]> }[];
+}) => Promise<{ createWritable(): Promise<{ write(data: string): Promise<void>; close(): Promise<void> }> }>;
+
+const isAbort = (e: unknown): boolean => e instanceof DOMException && e.name === 'AbortError';
+
+/**
+ * Save a CSV. Opens the system file picker where the browser has one (Chrome, including on Android),
+ * so you choose where it goes; otherwise the share sheet; otherwise a plain download.
+ */
+async function saveCsv(name: string, text: string): Promise<SaveResult> {
+  const picker = (window as unknown as { showSaveFilePicker?: SavePicker }).showSaveFilePicker;
+  if (typeof picker === 'function') {
+    try {
+      const handle = await picker({ suggestedName: name, types: [{ description: 'CSV file', accept: { 'text/csv': ['.csv'] } }] });
+      const out = await handle.createWritable();
+      await out.write(text);
+      await out.close();
+      return 'saved';
+    } catch (e) {
+      if (isAbort(e)) return 'cancelled';
+      // Fall through to the other ways.
+    }
+  }
+  const file = new File([text], name, { type: 'text/csv' });
+  if (navigator.canShare?.({ files: [file] })) {
+    try {
+      await navigator.share({ files: [file], title: name });
+      return 'shared';
+    } catch (e) {
+      if (isAbort(e)) return 'cancelled';
+    }
+  }
+  try {
+    const url = URL.createObjectURL(file);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 10_000);
+    return 'downloaded';
+  } catch {
+    return 'failed';
+  }
 }
+
+const SAVE_MESSAGE: Record<SaveResult, string> = {
+  saved: 'Saved.',
+  shared: 'Shared.',
+  downloaded: 'Downloaded.',
+  cancelled: 'Not saved.',
+  failed: "Couldn't save the file.",
+};
 
 function Section({ title, children }: { title: string; children: ReactNode }) {
   return (
@@ -269,6 +317,11 @@ export function SimPanel({ open, setup, match, onChange, onWatch, onWatchNew, on
   const [batch, setBatch] = useState<Batch>({ state: 'idle' });
   const [replayText, setReplayText] = useState('');
   const [replayError, setReplayError] = useState('');
+  const [saveNote, setSaveNote] = useState('');
+  const save = (name: string, text: string) => {
+    setSaveNote('');
+    void saveCsv(name, text).then((r) => setSaveNote(SAVE_MESSAGE[r]));
+  };
   const worker = useRef<Worker | null>(null);
   const runSeed = useRef(0);
   const f = setup.format;
@@ -527,21 +580,26 @@ export function SimPanel({ open, setup, match, onChange, onWatch, onWatchNew, on
                 <div className="flex flex-wrap gap-2">
                   <button
                     type="button"
-                    onClick={() => download(`darts-matches-${batch.matches}-${batch.seed}.csv`, batch.matchesCsv)}
+                    onClick={() => save(`darts-matches-${batch.matches}-${batch.seed}.csv`, batch.matchesCsv)}
                     className="h-9 rounded-md border border-gold bg-gold px-3 text-sm font-semibold text-gold-ink"
                   >
-                    Download matches CSV
+                    Save matches CSV
                   </button>
                   {batch.legsCsv && (
                     <button
                       type="button"
-                      onClick={() => download(`darts-legs-${batch.matches}-${batch.seed}.csv`, batch.legsCsv!)}
+                      onClick={() => save(`darts-legs-${batch.matches}-${batch.seed}.csv`, batch.legsCsv!)}
                       className="h-9 rounded-md border border-line bg-surface-2 px-3 text-sm font-semibold"
                     >
-                      Download legs CSV
+                      Save legs CSV
                     </button>
                   )}
                 </div>
+                {saveNote && (
+                  <p className="text-[13px] text-muted" role="status" data-testid="save-note">
+                    {saveNote}
+                  </p>
+                )}
               </div>
             )}
           </div>

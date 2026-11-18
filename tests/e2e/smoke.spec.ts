@@ -1,7 +1,26 @@
 import { expect, test } from '@playwright/test';
-import { readFileSync } from 'node:fs';
 
-test('the match plays, and a batch downloads as CSV', async ({ page }) => {
+type Saved = { name: string; text: string };
+
+test('the match plays, and batches save one file after another', async ({ page }) => {
+  // Stand in for the system file picker (a test can't tap a real one) and keep what gets written.
+  await page.addInitScript(() => {
+    const w = window as unknown as { __saved: Saved[]; showSaveFilePicker: unknown };
+    w.__saved = [];
+    w.showSaveFilePicker = async (opts: { suggestedName: string }) => ({
+      createWritable: async () => {
+        let buf = '';
+        return {
+          write: async (d: string) => {
+            buf += d;
+          },
+          close: async () => {
+            w.__saved.push({ name: opts.suggestedName, text: buf });
+          },
+        };
+      },
+    });
+  });
   const errors: string[] = [];
   page.on('pageerror', (e) => errors.push(e.message));
   page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
@@ -18,7 +37,7 @@ test('the match plays, and a batch downloads as CSV', async ({ page }) => {
   if (!wide) await page.getByRole('button', { name: 'Stats' }).click();
   await expect(page.getByTestId('stats')).toBeVisible();
 
-  // Run a small batch with everything random and download it.
+  // Run a small batch with everything random, then save three files in a row.
   await page.getByRole('button', { name: 'Simulate' }).click();
   await page.getByRole('button', { name: 'All random' }).first().click();
   await page.getByRole('button', { name: 'All random' }).first().click();
@@ -26,10 +45,18 @@ test('the match plays, and a batch downloads as CSV', async ({ page }) => {
   await page.locator('#perleg').check();
   await page.getByRole('button', { name: /^Run 40 matches/ }).click();
   await expect(page.getByTestId('batch-done')).toBeVisible({ timeout: 30_000 });
-  const [dl] = await Promise.all([page.waitForEvent('download'), page.getByRole('button', { name: 'Download matches CSV' }).click()]);
-  const csv = readFileSync(await dl.path(), 'utf8').trim().split('\n');
+  await page.getByRole('button', { name: 'Save matches CSV' }).click();
+  await expect(page.getByTestId('save-note')).toHaveText('Saved.');
+  await page.getByRole('button', { name: 'Save legs CSV' }).click();
+  await page.getByRole('button', { name: 'Save matches CSV' }).click();
+  await expect.poll(() => page.evaluate(() => (window as unknown as { __saved: Saved[] }).__saved.length)).toBe(3);
+  const saved = await page.evaluate(() => (window as unknown as { __saved: Saved[] }).__saved);
+  expect(saved[0].name).toMatch(/^darts-matches-40-\d+\.csv$/);
+  expect(saved[1].name).toMatch(/^darts-legs-40-\d+\.csv$/);
+  const csv = saved[0].text.trim().split('\n');
   expect(csv[0].startsWith('version,match,batch_seed,match_seed')).toBe(true);
   expect(csv.length).toBe(41);
+  expect(saved[2].text).toBe(saved[0].text);
 
   // Replay one row from it.
   await page.locator('#replay').fill(csv[5]);
