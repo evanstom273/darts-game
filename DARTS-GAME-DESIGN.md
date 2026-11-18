@@ -8,7 +8,7 @@ Authoritative, living record of the game's design. Timestamps are Europe/London,
 
 A **darts career game** (History #6): you make a character, or pick one of the hundreds of existing players (History #7), and play their career, but **you don't play the matches yourself: you watch them or sim them** (History #8). **It's text-based**, with the dartboard, the throws and the darts as graphics (History #16). Working title: none yet; the repository is `darts-game`.
 
-**Where the project stands (as of 2026-11-18T00:43:19+00:00):**
+**Where the project stands (as of 2026-11-18T00:47:08+00:00):**
 - Living design document created (History #1): the stealth game's design document, emptied out to its template and workflow.
 - Top-level concept set by Lyra (History #6–#8).
 - Round 1 of questions done: you are the player, the world is fictional but works like pro darts, matches are watched as a pure spectator, and the career is a deep sim (History #9–#12).
@@ -194,6 +194,7 @@ Don't rush through the questions simply to get to implementation. The design pro
 
 ### Development approach
 - **Next: attributes and the match view in the game, with a batch simulator for tuning.** The attributes go into the game; the match view Artifact goes in as the template; and a button simulates as many matches as Lyra wants and saves them as a CSV file she can download and bring back, so numbers can be tweaked in the code, 10,000 matches simulated, and the results used to see what worked and what didn't. A tuning and testing tool for this stage of the game. *(2026-11-18T00:03:31+00:00 — History #54)*
+- **Blinders stay all-or-nothing, for the whole match.** Seeing batch 3 (a hot pub player's upsets nearly all coming from a whole-match blinder at around 112, mostly winning 7–0), Lyra: "I'm really happy with that... genuinely perfect. Because it doesn't need to be realistic." *(2026-11-18T00:47:08+00:00 — History #61)*
 - **Fix in-match form and tone down the day roll** (Lyra, after batch 2). In-match form had been a near-constant boost; the day roll was deciding most matches. *(2026-11-18T00:43:19+00:00 — History #60)*
 - **The build plan is approved, with Lyra's changes.** Form is in. Both players' attributes can be random or set by hand. The format isn't presets: Lyra chooses legs or sets play, the length, double or straight in, the out rule "and that sort of thing", and a batch can randomise all of it per match, so a few thousand matches cover everything from short legs matches to long sets matches. The rest of Claude's plan stands: the scaffold, the match view ported as it is, the attributes' effects as first takes in one tuning file, a background batch with progress and cancel, a matches CSV with an optional legs CSV, seeds for replaying any match, a stage setting, and GitHub Pages deployment. *(2026-11-18T00:21:49+00:00 — History #55)*
 - **Not one-shotting the game.** It's built a piece at a time: each piece is made, tested, refined, tested and refined further before moving on to the next. Carried over from the stealth game. *(2026-11-17T22:55:31+00:00, documentation time — History #2)*
@@ -262,8 +263,8 @@ Earlier, for how a watched match is shown, Lyra shortlisted **the board, close u
 | Deployment | Live | GitHub Actions builds, tests and deploys to GitHub Pages on every push to `main`; the first run succeeded. https://evanstom273.github.io/darts-game/ *(2026-11-18T00:24:15+00:00)* |
 
 ### Known issues and limitations
-- **Upsets now come mostly from blinders.** Best of 11 legs: all-20s beats all-10s 96.7%, all-15s 92.7%; all-10s beats all-5s 91.1%; and a pub player (all-1s) beats the world's best (all-20s) about 5% of the time, because anyone can have a blinder (#36, #57). If that's too many, the lever is how often low-rated players get blinders.
-- **Whitewashes between equals are still common** in batch 2's format (best of 13 sets of 3 legs): 7–0 in about 11% of matches, against about 1.6% if every set were a coin flip. Most come from a blinder or stinker on one side, which #57 needs.
+- **Upsets now come mostly from blinders.** Best of 11 legs: all-20s beats all-10s 96.7%, all-15s 92.7%; all-10s beats all-5s 91.1%; and a pub player (all-1s) beats the world's best (all-20s) about 5% of the time, because anyone can have a blinder (#36, #57). Approved as it is (#61).
+- **Whitewashes between equals are still common** in batch 2's format (best of 13 sets of 3 legs): 7–0 in about 11% of matches, against about 1.6% if every set were a coin flip. Most come from a blinder or stinker on one side, which #57 needs; approved (#61).
 - ~~**Not yet run on the Fold.**~~ Lyra ran 10,000 matches on the Fold in under about 2 seconds (2026-11-18T00:24:15+00:00). Claude's figure of 11.5 s came from its cloud container, which is far slower, with everything random (longer matches on average).
 - **The darts are still the mock-up's flat darts**; the depth, 3D look and darts rework Lyra asked for (§C) hasn't been done.
 - **Stamina only covers long matches.** Long days and a packed schedule (#47) need tournaments and a calendar.
@@ -377,6 +378,7 @@ Earlier, for how a watched match is shown, Lyra shortlisted **the board, close u
 | 58 | 2026-11-18T00:43:19+00:00 | Players | Consistency, composure and stamina get a bigger effect. |
 | 59 | 2026-11-18T00:43:19+00:00 | Players | Between identical players, the better day wins about 65% (was 82%). |
 | 60 | 2026-11-18T00:43:19+00:00 | Workflow | Fix in-match form (it was a constant boost) and tone down the day roll. |
+| 61 | 2026-11-18T00:47:08+00:00 | Players | Blinders stay all-or-nothing for the whole match; it doesn't need to be realistic (Lyra, after batch 3). |
 
 ---
 
