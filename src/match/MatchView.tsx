@@ -4,8 +4,8 @@ import { Board3D } from './board3d/Board3D';
 import { CAMERAS, type CameraName, type DartDesign } from './board3d/options';
 import { Graphic } from './Graphic';
 import { StatsCard } from './StatsCard';
-import { aimPoint } from '../engine/board';
-import { chooseAim, OPENING_DOUBLE } from '../engine/rules';
+import { aimPoint, TREBLE, type Target } from '../engine/board';
+import { chooseAim } from '../engine/rules';
 import type { Match } from '../engine/match';
 import { loadView, saveView } from '../viewSettings';
 
@@ -34,30 +34,40 @@ function useWide(): boolean {
 }
 
 const WHOLE_BOARD = { x: 0, y: 0, r: 240 };
-const TARGET_R = 75;
+const ZOOM_R = 75;
 
-/** Frame these darts: their middle, pulled back far enough to show them all. */
-function frameDarts(ds: Match['boardDarts']): { x: number; y: number; r: number } {
-  const x = ds.reduce((s, d) => s + d.x, 0) / ds.length;
-  const y = ds.reduce((s, d) => s + d.y, 0) / ds.length;
-  const spread = Math.max(...ds.map((d) => Math.hypot(d.x - x, d.y - y)));
-  return { x: Math.round(x), y: Math.round(y), r: Math.round(Math.min(240, Math.max(TARGET_R, spread + 55))) };
+/** The upcoming dart's target if it's worth zooming in on: a finishing double, or treble 20 with a 180 on. */
+function zoomFor(m: Match): Target | null {
+  const p = m.turn;
+  const v = m.visit;
+  const left = 3 - v.darts.length;
+  if (left < 1 || !m.opened[p]) return null; // never for double-in opening darts
+  const aim = chooseAim(m.format.outRule, m.rem[p], left);
+  if (aim.finishing && aim.target.dbl) return aim.target;
+  if (v.darts.length === 2 && v.darts.every((d) => d.hit === TREBLE[20]) && aim.target === TREBLE[20]) return TREBLE[20];
+  return null;
+}
+
+/** After the visit: stay zoomed in to show how a 180 attempt or a finishing double went. */
+function heldFor(m: Match): Target | null {
+  const v = m.visit;
+  const last = v.darts[v.darts.length - 1];
+  if (!last) return null;
+  if (last.aim.dbl && v.attempts > 0) return last.aim;
+  if (v.darts.length === 3 && v.darts[0].hit === TREBLE[20] && v.darts[1].hit === TREBLE[20] && last.aim === TREBLE[20]) return TREBLE[20];
+  return null;
 }
 
 /**
- * What the dynamic camera frames. Before each dart: that dart's target (treble 20 when scoring, then
- * round the checkout dart by dart, so 32 is double 16). When the visit ends: all of its darts.
- * Between legs and at the end: the whole board.
+ * What the dynamic camera frames: the whole board, except when a 180 is on (treble 20 for the third
+ * dart) or a dart is going at a finishing double (that double). It holds the zoom through the pause
+ * after the visit so you see how it went, then goes back to the whole board.
  */
 function focusFor(m: Match): { x: number; y: number; r: number } {
-  if (m.phase === 'over') return WHOLE_BOARD;
-  if (m.phase === 'afterVisit' || m.phase === 'afterBust' || m.phase === 'afterLeg') {
-    return m.boardDarts.length ? frameDarts(m.boardDarts) : WHOLE_BOARD;
-  }
-  const p = m.turn;
-  const target = m.opened[p] ? chooseAim(m.format.outRule, m.rem[p], 3 - m.visit.darts.length).target : OPENING_DOUBLE;
-  const pt = aimPoint(target);
-  return { x: Math.round(pt.x), y: Math.round(pt.y), r: TARGET_R };
+  const t = m.phase === 'throw' ? zoomFor(m) : heldFor(m);
+  if (!t) return WHOLE_BOARD;
+  const pt = aimPoint(t);
+  return { x: Math.round(pt.x), y: Math.round(pt.y), r: ZOOM_R };
 }
 
 interface Props {

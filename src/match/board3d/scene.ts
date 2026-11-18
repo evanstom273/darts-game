@@ -38,6 +38,7 @@ const FIXED: Record<Exclude<CameraName, 'dynamic'>, CamSpec> = {
 /** The dynamic camera: frames a circle of radius r around (fx, fy), from a little below and left. */
 const DYN_FOV = 17;
 const dynamicSpec = (fx: number, fy: number, r: number): CamSpec => {
+  if (r >= 240) return FIXED.straight; // the whole board: the straight-on board camera
   const d = Math.max(380, r / Math.tan((DYN_FOV / 2) * (Math.PI / 180)));
   const k = d / 560;
   return {
