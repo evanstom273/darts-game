@@ -8,7 +8,7 @@ Authoritative, living record of the game's design. Timestamps are Europe/London,
 
 A **darts career game** (History #6): you make a character, or pick one of the hundreds of existing players (History #7), and play their career, but **you don't play the matches yourself: you watch them or sim them** (History #8). **It's text-based**, with the dartboard, the throws and the darts as graphics (History #16). Working title: none yet; the repository is `darts-game`.
 
-**Where the project stands (as of 2026-11-17T23:58:11+00:00):**
+**Where the project stands (as of 2026-11-18T00:03:31+00:00):**
 - Living design document created (History #1): the stealth game's design document, emptied out to its template and workflow.
 - Top-level concept set by Lyra (History #6–#8).
 - Round 1 of questions done: you are the player, the world is fictional but works like pro darts, matches are watched as a pure spectator, and the career is a deep sim (History #9–#12).
@@ -17,6 +17,7 @@ A **darts career game** (History #6): you make a character, or pick one of the h
 - Designing the match view (History #19–#22): it fits the Fold's outer screen in portrait and its inner screen, shows the board, the score and a full PDC-style graphic, with an optional full-stats view. To be built as an Artifact once Lyra has designed it. Layout, the stats view and commentary settled (History #23–#26); the graphic's contents, darts on the board, pace and more stats settled (History #27–#30); inner-screen stats, the "9" indicator and the stats layout settled (History #31–#33); graphics in SVG, and the "9" refined (History #34, #35).
 - **Match view mock-up built** as an Artifact (Lyra: "Build the match view artifact"), with a real dart-by-dart simulated match. Lyra's first look: she really likes the UI; it needs more depth and a more 3D look, and the darts especially need reworking. See §C.
 - **How players play:** no ceilings; everybody can throw any average, with form (in-match and across matches and tournaments) and attributes deciding how often, and good form is never a guarantee (History #36–#39). Attributes started: composure, scoring and checkouts, no overall skill, and attributes are guides, not guarantees (History #40–#42). Consistency and stamina added, making five, on a 1–20 scale (History #43–#45). What composure, stamina and consistency cover, and how attributes change over a career, settled (History #46–#50). What moves attributes, and free choice of a created character's attributes, settled (History #51–#53).
+- **Next build requested** (History #54): the attributes and the match view into the game, plus a batch simulator that exports CSV for tuning. Claude to explain the plan and wait for the go-ahead.
 
 **Stack:** web: React, Vite, TypeScript, Tailwind CSS and IndexedDB via Dexie, with Phaser only if the darts need it (History #17). Deployed to GitHub Pages for now, maybe Cloudflare Workers later if needed (History #18).
 
@@ -186,6 +187,7 @@ Don't rush through the questions simply to get to implementation. The design pro
 - **Graphics are SVG:** the board and the darts are drawn as SVG. Lyra said "Use SVGs" in answer to how the board and darts are drawn. *(Wording corrected 2026-11-17T23:39:43+00:00: Claude first wrote it as covering all the game's graphics, which went further than Lyra said.)* *(2026-11-17T23:28:36+00:00 — History #34)*
 
 ### Development approach
+- **Next: attributes and the match view in the game, with a batch simulator for tuning.** The attributes go into the game; the match view Artifact goes in as the template; and a button simulates as many matches as Lyra wants and saves them as a CSV file she can download and bring back, so numbers can be tweaked in the code, 10,000 matches simulated, and the results used to see what worked and what didn't. A tuning and testing tool for this stage of the game. *(2026-11-18T00:03:31+00:00 — History #54)*
 - **Not one-shotting the game.** It's built a piece at a time: each piece is made, tested, refined, tested and refined further before moving on to the next. Carried over from the stealth game. *(2026-11-17T22:55:31+00:00, documentation time — History #2)*
 - **Depth before breadth.** Each mechanic is made polished, satisfying and fully functional before new ones are added. Workflow: Design → Implement → Test → Refine → Test Again → Refine Further → Move On. In full in §A. *(2026-11-17T22:55:31+00:00, documentation time — History #3)*
 - **Claude Artifacts as a visual workshop.** Characters, animations, environments, small mechanic prototypes and UI are designed, compared and refined in Artifacts, approved by Lyra, then used as the reference for implementation. In full in §A. *(2026-11-17T22:55:31+00:00, documentation time — History #4)*
@@ -316,6 +318,7 @@ Earlier, for how a watched match is shown, Lyra shortlisted **the board, close u
 | 51 | 2026-11-17T23:58:11+00:00 | Players | Training and playing well move attributes up; playing badly consistently over a long period knocks them down. Only a little. |
 | 52 | 2026-11-17T23:58:11+00:00 | Players | Created characters: the player picks every attribute freely, 1 to 20, choosing their own difficulty. |
 | 53 | 2026-11-17T23:58:11+00:00 | Concept | Touchstone: MDickie's games (Wrestling Empire), where maximum attributes don't win every match. |
+| 54 | 2026-11-18T00:03:31+00:00 | Workflow | Next build: attributes and the match view in the game, plus a batch simulator exporting CSV for tuning. |
 
 ---
 
